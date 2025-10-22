@@ -29,7 +29,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function DsaTopicPage({ params }: { params: { slug: string } }) {
-  const topicData = await import(`@/data/${params.slug.replace(/-/g, '_')}.ts`);
+  // Handle the case where params.slug is undefined during client-side navigation
+  if (!params.slug) {
+    return null; // or a loading spinner
+  }
+
+  const topicData = await import(`@/data/${params.slug}.ts`);
   const { title, description, patterns } = topicData.data;
 
   if (!title) {

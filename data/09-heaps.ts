@@ -1,13 +1,17 @@
 export const data = {
   title: 'Heaps',
   description: 'A heap (or Priority Queue) is a specialized tree-based data structure that satisfies the heap property, allowing for efficient retrieval of the minimum or maximum element.',
-  patterns:,
+  patterns: [
+    {
+      title: 'Top K Elements',
+      description: 'This pattern uses a min-heap of size K to efficiently find the Kth largest/smallest element or the top K frequent/largest/smallest elements in a collection.',
+      exampleProblems: ['Kth Largest Element in an Array', 'Top K Frequent Elements', 'K Closest Points to Origin'],
       solution: {
         problemTitle: 'Kth Largest Element in an Array',
         code: `import java.util.PriorityQueue;
 
 class Solution {
-    public int findKthLargest(int nums, int k) {
+    public int findKthLargest(int[] nums, int k) {
         // Use a min-heap to keep track of the k largest elements.
         PriorityQueue<Integer> minHeap = new PriorityQueue<>();
 
@@ -32,7 +36,7 @@ class Solution {
     {
       title: 'Two Heaps for Median Finding',
       description: 'This pattern is designed for finding the median of a dynamically growing data stream. It uses a max-heap for the smaller half and a min-heap for the larger half, keeping them balanced.',
-      exampleProblems:,
+      exampleProblems: ['Find Median from Data Stream'],
       solution: {
         problemTitle: 'Find Median from Data Stream',
         code: `import java.util.PriorityQueue;

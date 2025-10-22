@@ -1,13 +1,17 @@
 export const data = {
   title: 'Stacks & Queues',
   description: 'Stacks (LIFO) and Queues (FIFO) are fundamental linear data structures. In advanced problems, they are not just used for storage but as mechanisms to enforce order and process elements in specific sequences.',
-  patterns:,
+  patterns: [
+    {
+      title: 'Monotonic Stack',
+      description: 'A stack where elements are always in a sorted order (increasing or decreasing). It is highly effective for problems involving finding the next/previous greater/smaller element.',
+      exampleProblems: ['Daily Temperatures', 'Next Greater Element I/II', 'Largest Rectangle in Histogram'],
       solution: {
         problemTitle: 'Daily Temperatures',
         code: `import java.util.Stack;
 
 class Solution {
-    public int dailyTemperatures(int temperatures) {
+    public int[] dailyTemperatures(int[] temperatures) {
         int n = temperatures.length;
         int result = new int[n];
         // The stack will store indices of the temperatures array.
@@ -37,7 +41,7 @@ class Solution {
     {
       title: 'Queue for Level-Order Traversal (BFS)',
       description: 'A queue is the cornerstone of the Breadth-First Search (BFS) algorithm. In trees and graphs, a queue is used to explore nodes level by level, which is fundamental for finding the shortest path in unweighted graphs.',
-      exampleProblems:,
+      exampleProblems: ['Binary Tree Level Order Traversal', 'Rotting Oranges', 'Minimum Depth of Binary Tree'],
       solution: {
         problemTitle: 'Generic BFS Traversal with a Queue',
         code: `import java.util.*;

@@ -1,7 +1,11 @@
 export const data = {
   title: 'Trees',
   description: 'Trees are hierarchical data structures. Binary trees and Binary Search Trees (BSTs) are fundamental variants that test recursion, traversal, and property validation.',
-  patterns:,
+  patterns: [
+    {
+      title: 'Traversals (DFS and BFS)',
+      description: 'Depth-First Search (DFS) variants (pre-order, in-order, post-order) and Breadth-First Search (BFS) are the primary ways to visit every node in a tree.',
+      exampleProblems: ['Binary Tree Inorder Traversal', 'Binary Tree Level Order Traversal', 'Validate Binary Search Tree'],
       solution: {
         problemTitle: 'Binary Tree Level Order Traversal (BFS)',
         code: `import java.util.*;
@@ -24,10 +28,10 @@ class Solution {
                 TreeNode currentNode = queue.poll();
                 currentLevel.add(currentNode.val);
 
-                if (currentNode.left!= null) {
+                if (currentNode.left != null) {
                     queue.offer(currentNode.left);
                 }
-                if (currentNode.right!= null) {
+                if (currentNode.right != null) {
                     queue.offer(currentNode.right);
                 }
             }
@@ -44,16 +48,13 @@ class Solution {
     {
       title: 'Lowest Common Ancestor (LCA)',
       description: 'The LCA of two nodes is the deepest node that has both as descendants. The approach differs for a general binary tree versus a more structured Binary Search Tree.',
-      exampleProblems:,
+      exampleProblems: ['Lowest Common Ancestor of a Binary Search Tree', 'Lowest Common Ancestor of a Binary Tree'],
       solution: {
         problemTitle: 'Lowest Common Ancestor of a Binary Tree',
         code: `class Solution {
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         // Base case: if root is null, or is one of the target nodes.
-        if (root == null |
-
-| root == p |
-| root == q) {
+        if (root == null || root == p || root == q) {
             return root;
         }
 
@@ -62,12 +63,12 @@ class Solution {
         TreeNode rightSearchResult = lowestCommonAncestor(root.right, p, q);
 
         // If both children return a non-null value, the current root is the LCA.
-        if (leftSearchResult!= null && rightSearchResult!= null) {
+        if (leftSearchResult != null && rightSearchResult != null) {
             return root;
         }
 
         // Otherwise, bubble up the non-null result from one of the children.
-        return leftSearchResult!= null? leftSearchResult : rightSearchResult;
+        return leftSearchResult != null ? leftSearchResult : rightSearchResult;
     }
 }
 // Time Complexity: O(n)

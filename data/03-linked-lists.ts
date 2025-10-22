@@ -1,7 +1,11 @@
 export const data = {
   title: 'Linked Lists',
   description: 'Linked lists test a candidate\'s ability to manipulate pointers and manage memory references carefully. Solutions often involve clever pointer manipulation rather than index-based access.',
-  patterns:,
+  patterns: [
+    {
+      title: 'Fast & Slow Pointers (Floyd\'s Cycle-Finding)',
+      description: 'This pattern uses two pointers that move at different speeds to detect cycles, find the middle of a list, or solve other problems where relative positions matter.',
+      exampleProblems: ['Linked List Cycle', 'Middle of the Linked List', 'Linked List Cycle II'],
       solution: {
         problemTitle: 'Linked List Cycle II',
         code: `class ListNode {
@@ -14,10 +18,8 @@ export const data = {
 }
 
 public class Solution {
-    public ListNode detectCycle(ListNode head) {
-        if (head == null |
-
-| head.next == null) {
+    public ListNode detectCycle(ListNode head) { 
+        if (head == null || head.next == null) {
             return null;
         }
 
@@ -58,9 +60,9 @@ public class Solution {
     {
       title: 'In-place Reversal',
       description: 'This fundamental pattern involves reversing a linked list or a sublist without allocating additional memory. It is achieved by iteratively re-wiring the `next` pointers of the nodes using `prev`, `curr`, and `next` pointers.',
-      exampleProblems:,
+      exampleProblems: ['Reverse Linked List', 'Reverse Linked List II', 'Palindrome Linked List'],
       solution: {
-        problemTitle: 'Reverse Linked List',
+        problemTitle: 'Reverse Linked List', // `prev` is the new head
         code: `class Solution {
     public ListNode reverseList(ListNode head) {
         ListNode prev = null;
@@ -71,7 +73,7 @@ public class Solution {
             prev = curr;                  // Move prev one step forward
             curr = nextTemp;              // Move curr one step forward
         }
-        return prev; // `prev` is the new head
+        return prev;
     }
 }
 // Time Complexity: O(n)

@@ -1,15 +1,19 @@
 export const data = {
   title: 'Tries',
   description: 'A Trie, or prefix tree, is a specialized tree data structure used for efficient storage and retrieval of a set of strings. It is ideal for any problem involving prefix-based operations.',
-  patterns:,
+  patterns: [
+    {
+      title: 'Standard Trie Implementation',
+      description: 'The fundamental implementation involving a TrieNode class and methods for `insert`, `search`, and `startsWith`. This forms the basis for solving many string and prefix-related problems.',
+      exampleProblems: ['Implement Trie (Prefix Tree)', 'Word Search II', 'Design Add and Search Words Data Structure'],
       solution: {
         problemTitle: 'Implement Trie (Prefix Tree)',
         code: `class TrieNode {
-    public TrieNode children;
+    public TrieNode[] children;
     public boolean isEndOfWord;
 
     public TrieNode() {
-        children = new TrieNode[2]; // for 'a' through 'z'
+        children = new TrieNode[26]; // for 'a' through 'z'
         isEndOfWord = false;
     }
 }
@@ -35,11 +39,11 @@ class Trie {
 
     public boolean search(String word) {
         TrieNode node = searchPrefix(word);
-        return node!= null && node.isEndOfWord;
+        return node != null && node.isEndOfWord;
     }
 
     public boolean startsWith(String prefix) {
-        return searchPrefix(prefix)!= null;
+        return searchPrefix(prefix) != null;
     }
 
     private TrieNode searchPrefix(String word) {
@@ -58,6 +62,6 @@ class Trie {
 // Space Complexity: O(N * L_avg)`,
         explanation: 'This implementation uses a `TrieNode` class with an array of children. The `insert`, `search`, and `startsWith` methods traverse the tree from the root, character by character, to perform their respective operations efficiently.'
       }
-    }
+    },
   ]
 };

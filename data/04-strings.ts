@@ -1,15 +1,16 @@
 export const data = {
   title: 'Strings',
   description: 'String problems are ubiquitous and often serve as a medium to test other algorithmic patterns, such as dynamic programming, two pointers, or sliding window.',
-  patterns:[j]`, is often used to store a solution for substrings `s1[0..i]` and `s2[0..j]`.',
-      exampleProblems:,
+  patterns: [
+    {
+      title: 'Expand From Center',
+      description: 'A highly efficient technique for palindrome-related problems. It iterates through each character as a potential center and expands outwards.',
+      exampleProblems: ['Longest Palindromic Substring', 'Palindromic Substrings'],
       solution: {
         problemTitle: 'Longest Palindromic Substring',
         code: `class Solution {
     public String longestPalindrome(String s) {
-        if (s == null |
-
-| s.length() < 1) {
+        if (s == null || s.length() < 1) {
             return "";
         }
         int start = 0;

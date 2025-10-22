@@ -1,14 +1,16 @@
 export const data = {
   title: 'Graphs',
   description: 'Graphs are the most general data structure, capable of modeling arbitrary relationships. Traversal, pathfinding, and connectivity are the most common problem categories.',
-  patterns:,
+  patterns: [
+    {
+      title: 'Matrix Traversal (DFS/BFS)',
+      description: 'Many graph problems are presented as a 2D matrix. Standard DFS or BFS traversals can be adapted to explore the grid, treating cells as nodes and adjacent cells as edges.',
+      exampleProblems: ['Number of Islands', 'Rotting Oranges', 'Pacific Atlantic Water Flow'],
       solution: {
         problemTitle: 'Number of Islands (DFS)',
         code: `class Solution {
-    public int numIslands(char grid) {
-        if (grid == null |
-
-| grid.length == 0) {
+    public int numIslands(char[][] grid) {
+        if (grid == null || grid.length == 0) {
             return 0;
         }
         int numIslands = 0;
@@ -23,13 +25,8 @@ export const data = {
         return numIslands;
     }
 
-    private void dfs(char grid, int r, int c) {
-        if (r < 0 |
-
-| r >= grid.length |
-| c < 0 |
-| c >= grid.length |
-| grid[r][c] == '0') {
+    private void dfs(char[][] grid, int r, int c) {
+        if (r < 0 || r >= grid.length || c < 0 || c >= grid[0].length || grid[r][c] == '0') {
             return;
         }
         
@@ -48,11 +45,11 @@ export const data = {
     {
       title: 'Union-Find (Disjoint Set Union)',
       description: 'A highly efficient data structure for problems involving partitioning elements into disjoint subsets. It provides near-constant time `find` and `union` operations, perfect for connectivity problems.',
-      exampleProblems:,
+      exampleProblems: ['Number of Connected Components in an Undirected Graph', 'Graph Valid Tree', 'Redundant Connection'],
       solution: {
         problemTitle: 'Number of Connected Components',
         code: `class Solution {
-    private int parent;
+    private int[] parent;
     private int count;
 
     private int find(int i) {
@@ -64,21 +61,21 @@ export const data = {
     private void union(int i, int j) {
         int rootI = find(i);
         int rootJ = find(j);
-        if (rootI!= rootJ) {
+        if (rootI != rootJ) {
             parent[rootI] = rootJ;
             count--;
         }
     }
 
-    public int countComponents(int n, int edges) {
+    public int countComponents(int n, int[][] edges) {
         parent = new int[n];
         count = n;
         for (int i = 0; i < n; i++) {
             parent[i] = i;
         }
         
-        for (int edge : edges) {
-            union(edge, edge[1]);
+        for (int[] edge : edges) {
+            union(edge[0], edge[1]);
         }
         
         return count;

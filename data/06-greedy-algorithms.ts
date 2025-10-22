@@ -1,7 +1,11 @@
 export const data = {
   title: 'Greedy Algorithms',
   description: 'Greedy algorithms construct a solution by making a sequence of locally optimal choices, hoping to arrive at a global optimum. Sorting the input is often a critical first step.',
-  patterns:,
+  patterns: [
+    {
+      title: 'Sort and Process',
+      description: 'A common greedy strategy where sorting the input by a specific criterion simplifies the problem, allowing for a linear pass to make locally optimal choices.',
+      exampleProblems: ['Merge Intervals', 'Non-overlapping Intervals', 'Minimum Number of Arrows to Burst Balloons'],
       solution: {
         problemTitle: 'Merge Intervals',
         code: `import java.util.ArrayList;
@@ -9,23 +13,23 @@ import java.util.Arrays;
 import java.util.List;
 
 class Solution {
-    public int merge(int intervals) {
+    public int[][] merge(int[][] intervals) {
         if (intervals.length <= 1) {
             return intervals;
         }
 
         // Step 1: Sort intervals by start time.
-        Arrays.sort(intervals, (a, b) -> Integer.compare(a, b));
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
 
-        List<int> merged = new ArrayList<>();
-        merged.add(intervals);
+        List<int[]> merged = new ArrayList<>();
+        merged.add(intervals[0]);
 
         // Step 2: Iterate and merge.
         for (int i = 1; i < intervals.length; i++) {
-            int currentInterval = intervals[i];
-            int lastMergedInterval = merged.get(merged.size() - 1);
+            int[] currentInterval = intervals[i];
+            int[] lastMergedInterval = merged.get(merged.size() - 1);
 
-            if (currentInterval <= lastMergedInterval[1]) {
+            if (currentInterval[0] <= lastMergedInterval[1]) {
                 // Overlap detected, merge them.
                 lastMergedInterval[1] = Math.max(lastMergedInterval[1], currentInterval[1]);
             } else {
@@ -34,13 +38,13 @@ class Solution {
             }
         }
 
-        return merged.toArray(new int[merged.size()]);
+        return merged.toArray(new int[merged.size()][]);
     }
 }
 // Time Complexity: O(n log n) due to sorting
 // Space Complexity: O(n) for the result list`,
         explanation: 'The greedy strategy is to sort the intervals by their start times. This allows the algorithm to consider each interval in order and merge it with the previous one if they overlap, ensuring a linear-time merge pass after the initial sort.'
       }
-    }
+    },
   ]
 };

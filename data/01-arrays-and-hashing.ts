@@ -1,11 +1,15 @@
 export const data = {
   title: 'Arrays & Hashing',
   description: 'Arrays and hashing are the foundational tools for a vast category of interview problems. Mastery lies not in knowing their basic operations, but in recognizing and applying patterns that optimize solutions from brute-force to linear time.',
-  patterns:,
+  patterns: [
+    {
+      title: 'Two Pointers (Opposite Ends)',
+      description: 'A common pattern for sorted arrays where two pointers start at opposite ends and move towards each other to find a pair or a condition.',
+      exampleProblems: ['Two Sum II', 'Container With Most Water', 'Valid Palindrome'],
       solution: {
         problemTitle: 'Two Sum II - Input Array Is Sorted',
         code: `class Solution {
-    public int twoSum(int numbers, int target) {
+    public int[] twoSum(int[] numbers, int target) {
         // Initialize two pointers, one at the start and one at the end.
         int left = 0;
         int right = numbers.length - 1;
@@ -16,7 +20,7 @@ export const data = {
 
             if (currentSum == target) {
                 // Found the pair. Return their 1-based indices.
-                return new int{left + 1, right + 1};
+                return new int[]{left + 1, right + 1};
             } else if (currentSum < target) {
                 // The sum is too small, so we need a larger value.
                 // Move the left pointer to the right to increase the sum.
@@ -29,7 +33,7 @@ export const data = {
         }
 
         // According to problem constraints, a solution always exists.
-        return new int{-1, -1};
+        return new int[]{-1, -1};
     }
 }
 // Time Complexity: O(n)
@@ -40,11 +44,11 @@ export const data = {
     {
       title: 'Sliding Window',
       description: 'Essential for problems concerning contiguous subarrays or substrings. It maintains a "window" that slides over the data, avoiding redundant calculations and reducing complexity to O(n).',
-      exampleProblems:,
+      exampleProblems: ['Minimum Size Subarray Sum', 'Longest Substring Without Repeating Characters', 'Best Time to Buy and Sell Stock'],
       solution: {
         problemTitle: 'Minimum Size Subarray Sum',
         code: `class Solution {
-    public int minSubArrayLen(int target, int nums) {
+    public int minSubArrayLen(int target, int[] nums) {
         int windowStart = 0;
         int currentSum = 0;
         int minLength = Integer.MAX_VALUE;
@@ -54,7 +58,7 @@ export const data = {
 
             while (currentSum >= target) {
                 minLength = Math.min(minLength, windowEnd - windowStart + 1);
-                currentSum -= nums;
+                currentSum -= nums[windowStart];
                 windowStart++;
             }
         }
@@ -70,14 +74,14 @@ export const data = {
     {
       title: 'Prefix Sum',
       description: 'A pre-computation technique that transforms an array to allow for rapid O(1) range sum queries. It is especially powerful when combined with a HashMap.',
-      exampleProblems:,
+      exampleProblems: ['Subarray Sum Equals K', 'Range Sum Query - Immutable', 'Find Pivot Index'],
       solution: {
         problemTitle: 'Subarray Sum Equals K',
         code: `import java.util.HashMap;
 import java.util.Map;
 
 class Solution {
-    public int subarraySum(int nums, int k) {
+    public int subarraySum(int[] nums, int k) {
         int count = 0;
         int currentSum = 0;
         Map<Integer, Integer> prefixSumFreq = new HashMap<>();
@@ -106,14 +110,14 @@ class Solution {
     {
         title: 'Hashing for Lookups',
         description: 'HashMaps and HashSets provide constant-time average complexity for lookups, insertions, and deletions, making them ideal for frequency counting and efficient searching.',
-        exampleProblems:,
+        exampleProblems: ['Contains Duplicate', 'Valid Anagram', 'Group Anagrams', 'Count Elements With Maximum Frequency'],
         solution: {
           problemTitle: 'Count Elements With Maximum Frequency',
           code: `import java.util.HashMap;
 import java.util.Map;
 
 class Solution {
-    public int maxFrequencyElements(int nums) {
+    public int maxFrequencyElements(int[] nums) {
         Map<Integer, Integer> freqMap = new HashMap<>();
         int maxFreq = 0;
         int totalFreq = 0;
