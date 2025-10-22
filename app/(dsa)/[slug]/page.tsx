@@ -18,7 +18,8 @@ export async function generateStaticParams() {
 
 // This function generates metadata for each page
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const topic = topics.find((t) => t.slug === params.slug);
+  const resolvedParams = await params;
+  const topic = topics.find((t) => t.slug === resolvedParams.slug);
   if (!topic) {
     return notFound();
   }
@@ -29,12 +30,15 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function DsaTopicPage({ params }: { params: { slug: string } }) {
+  const resolvedParams = await params;
   // Handle the case where params.slug is undefined during client-side navigation
-  if (!params.slug) {
+  if (!resolvedParams.slug) {
     return null; // or a loading spinner
   }
 
-  const topicData = await import(`@/data/${params.slug}.ts`);
+  const topicModule = await import(`@/data/${resolvedParams.slug}.ts`);
+  // Handle potential default export wrapping by Next.js
+  const topicData = topicModule.default || topicModule;
   const { title, description, patterns } = topicData.data;
 
   if (!title) {
@@ -48,7 +52,7 @@ export default async function DsaTopicPage({ params }: { params: { slug: string 
         <p className="text-xl text-muted-foreground">{description}</p>
       </div>
 
-      <Accordion type="single" collapsible className="w-full" defaultValue={patterns?.title}>
+      <Accordion type="single" collapsible className="w-full" defaultValue={patterns?.[0]?.title}>
         {patterns.map((pattern: any) => (
           <AccordionItem value={pattern.title} key={pattern.title}>
             <AccordionTrigger className="text-2xl font-semibold hover:no-underline">
