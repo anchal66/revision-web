@@ -8,7 +8,7 @@ export default function Home() {
     <div className="w-full">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">
-          DSA Pattern Compendium
+          DSA Revision Pattern
         </h1>
         <p className="mt-4 text-lg text-muted-foreground">
           A curated collection of essential DSA patterns for senior software engineer interviews.

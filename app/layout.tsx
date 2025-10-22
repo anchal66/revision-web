@@ -9,7 +9,7 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "DSA Revision Compendium",
+  title: "Interview Revision |  DSA Revision",
   description: "A pattern-based guide for senior software engineer interviews.",
 };
 
