@@ -60,4 +60,19 @@ export const topics: Topic[] = [
     title: "Graphs",
     description: "The most general data structure, capable of modeling arbitrary relationships.",
   },
+  {
+    slug: "12-dynamic-programming-part-1",
+    title: "Dp Part 1",
+    description: "An optimization technique for problems with optimal substructure.",
+  },
+  {
+    slug: "13-dynamic-programming-part-2",
+    title: "DP Part 2",
+    description: "The most general data structure, capable of modeling arbitrary relationships.",
+  },
+  {
+    slug: "14-dynamic-programming-part-3",
+    title: "DP Part 3",
+    description: "The most general data structure, capable of modeling arbitrary relationships.",
+  },
 ];
