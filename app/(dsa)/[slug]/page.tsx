@@ -29,6 +29,19 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
+/**
+ * Helper function to render simple markdown-like text as HTML.
+ * It handles bold, inline code, newlines, and removes contentReference tags.
+ */
+function renderSimpleMarkdown(text: string): string {
+  if (!text) return "";
+  return text
+    .replace(/contentReference\[.*?\]\{.*?\}/g, '') // Remove citations
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+    .replace(/`(.*?)`/g, '<code>$1</code>')       // Inline code
+    .replace(/\n/g, '<br />');                   // Newlines
+}
+
 export default async function DsaTopicPage({ params }: { params: { slug: string } }) {
   const resolvedParams = await params;
   // Handle the case where params.slug is undefined during client-side navigation
@@ -49,7 +62,11 @@ export default async function DsaTopicPage({ params }: { params: { slug: string 
     <article className="prose dark:prose-invert max-w-none">
       <div className="mb-8">
         <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-2">{title}</h1>
-        <p className="text-xl text-muted-foreground">{description}</p>
+        {/* UPDATED: Use div with dangerouslySetInnerHTML to render markdown */}
+        <div
+          className="text-xl text-muted-foreground"
+          dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(description) }}
+        />
       </div>
 
       <Accordion type="single" collapsible className="w-full" defaultValue={patterns?.[0]?.title}>
@@ -58,8 +75,10 @@ export default async function DsaTopicPage({ params }: { params: { slug: string 
             <AccordionTrigger className="text-2xl font-semibold hover:no-underline">
               {pattern.title}
             </AccordionTrigger>
-            <AccordionContent className="prose-p:text-base">
-              <p>{pattern.description}</p>
+            {/* UPDATED: Added prose classes to ensure rendered HTML is styled */}
+            <AccordionContent className="prose-p:text-base prose dark:prose-invert max-w-none">
+              {/* UPDATED: Use div with dangerouslySetInnerHTML */}
+              <div dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(pattern.description) }} />
               
               <div className="my-4">
                 <h4 className="font-semibold mb-2">Example Problems:</h4>
@@ -72,7 +91,11 @@ export default async function DsaTopicPage({ params }: { params: { slug: string 
 
               <div className="mt-6 p-4 border rounded-lg bg-background">
                 <h4 className="font-semibold text-lg mb-2">Solution Spotlight: {pattern.solution.problemTitle}</h4>
-                <p className="text-sm text-muted-foreground mb-4">{pattern.solution.explanation}</p>
+                {/* UPDATED: Use div, add prose classes, and use dangerouslySetInnerHTML */}
+                <div 
+                  className="text-sm text-muted-foreground mb-4 prose dark:prose-invert max-w-none" 
+                  dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(pattern.solution.explanation) }}
+                />
                 <CodeBlock 
                   code={pattern.solution.code} 
                   lang="java"
