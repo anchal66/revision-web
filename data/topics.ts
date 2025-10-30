@@ -11,6 +11,11 @@ export const topics: Topic[] = [
     description: "The foundational tools for a vast category of interview problems.",
   },
   {
+    slug: "01-1-binary-search",
+    title: "Binary Search",
+    description: "Binary Search patterns",
+  },
+  {
     slug: "02-stacks-and-queues",
     title: "Stacks & Queues",
     description: "Mechanisms to enforce order and process elements in specific sequences.",
@@ -36,11 +41,6 @@ export const topics: Topic[] = [
     description: "Construct a solution by making a sequence of locally optimal choices.",
   },
   {
-    slug: "07-dynamic-programming",
-    title: "Dynamic Programming",
-    description: "An optimization technique for problems with optimal substructure.",
-  },
-  {
     slug: "08-trees",
     title: "Trees",
     description: "Hierarchical data structures that test recursion and traversal.",
@@ -62,7 +62,7 @@ export const topics: Topic[] = [
   },
   {
     slug: "12-dynamic-programming-part-1",
-    title: "Dp Part 1",
+    title: "DP Part 1",
     description: "An optimization technique for problems with optimal substructure.",
   },
   {
