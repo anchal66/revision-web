@@ -17,7 +17,6 @@ export const data = {
                    "- **Floor/Ceil:** Floor is the largest element ≤ target (basically one less than a lower bound); Ceil is the smallest ≥ target (a lower bound):contentReference[oaicite:13]{index=13}.\n" +
                    "Logic: At each step compare `arr[mid]` with target. Move `left` or `right` accordingly. Stop when pointers cross.",
       exampleProblems: ["Search an element in sorted array", "Find first and last occurrence of a value"],
-      // !!! CHANGE HERE: 'solution' is now 'solutions' (an array)
       solutions: [{
         problemTitle: "Search for a Target in a Sorted Array",
         code: "public int search(int[] arr, int target) {\n" +
@@ -49,7 +48,6 @@ export const data = {
                    "- **Count Rotations:** Equal to the index of the minimum element:contentReference[oaicite:16]{index=16}.\n\n" +
                    "Logic for search: At each step, if `arr[mid] == target`, return it. Otherwise, check if the left half is sorted (`arr[left] <= arr[mid]`); if so and target is in `[arr[left],arr[mid])`, move `right=mid-1`, else `left=mid+1`. If right half is sorted, apply similar logic:contentReference[oaicite:17]{index=17}.",
       exampleProblems: ["Search in a rotated sorted array", "Find minimum in a rotated sorted array"],
-      // !!! CHANGE HERE: 'solution' is now 'solutions' (an array)
       solutions: [{
         problemTitle: "Search in Rotated Sorted Array (No Duplicates)",
         code: "public int searchRotated(int[] arr, int target) {\n" +

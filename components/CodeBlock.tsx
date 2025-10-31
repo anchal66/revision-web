@@ -25,7 +25,7 @@ export function CodeBlock({ code, lang, filename }: CodeBlockProps) {
   // Function to detect if the component is rendered inside a dark-mode parent
   const getCurrentTheme = () => {
     // Check if the current container (or any parent) has the 'dark' class
-    let element = containerRef.current;
+    let element: HTMLElement | null = containerRef.current;
     while (element) {
       if (element.classList.contains('dark')) {
         return SHIKI_THEMES.dark;
