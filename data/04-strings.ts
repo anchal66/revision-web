@@ -6,7 +6,7 @@ export const data = {
       title: '2D Dynamic Programming',
       description: 'Many string problems involving two strings can be solved with a 2D DP table, where `dp[i][j]` typically stores a solution for substrings `s1[0..i]` and `s2[0..j]`.',
       exampleProblems: ['Longest Common Subsequence', 'Edit Distance', 'Interleaving String'],
-      solution: {
+      solutions: [{
         problemTitle: 'Longest Common Subsequence',
         code: `class Solution {
     public int longestCommonSubsequence(String text1, String text2) {
@@ -29,13 +29,13 @@ export const data = {
 // Time Complexity: O(m * n)
 // Space Complexity: O(m * n)`,
         explanation: 'This tabulation solution uses a 2D array where `dp[i][j]` stores the LCS length for `text1[0..i-1]` and `text2[0..j-1]`. If characters match, the length increases by 1 from the diagonal. If not, it takes the max from the top or left cell, representing the optimal choice of excluding one character.'
-      }
+      }]
     },
     {
       title: 'Expand From Center',
       description: 'A highly efficient technique for palindrome-related problems. It iterates through each character (and space between characters) as a potential center and expands outwards.',
       exampleProblems: ['Longest Palindromic Substring', 'Palindromic Substrings'],
-      solution: {
+      solutions: [{
         problemTitle: 'Longest Palindromic Substring',
         code: `class Solution {
     public String longestPalindrome(String s) { 
@@ -66,13 +66,13 @@ export const data = {
 // Time Complexity: O(n^2)
 // Space Complexity: O(1)`,
         explanation: 'This approach considers all 2n-1 possible centers of a palindrome. For each center, it expands outwards with two pointers, checking for character equality. This avoids the O(n^2) space complexity of a typical DP solution.'
-      }
+      }]
     },
     {
       title: 'Advanced Search: Rabin-Karp',
       description: 'Uses a rolling hash function to efficiently compare a pattern\'s hash with the hash of the current window in the text, achieving an average time complexity of O(n+m).',
       exampleProblems: ['Find the Index of the First Occurrence in a String', 'Longest Duplicate Substring'],
-      solution: {
+      solutions: [{
         problemTitle: 'Rabin-Karp Implementation',
         code: `class RabinKarp {
     private final int PRIME = 101;
@@ -111,7 +111,7 @@ export const data = {
 // Time Complexity: Average O(n+m), Worst O(n*m)
 // Space Complexity: O(1)`,
         explanation: 'The Rabin-Karp algorithm calculates a hash value for the pattern and the initial window of the text. It then "rolls" the hash across the text in O(1) time per step by subtracting the outgoing character and adding the incoming one. A direct string comparison is only performed when the hashes match.'
-      }
+      }]
     }
   ]
 };

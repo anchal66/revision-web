@@ -6,7 +6,7 @@ export const data = {
       title: 'Sort and Process',
       description: 'A common greedy strategy where sorting the input by a specific criterion simplifies the problem, allowing for a linear pass to make locally optimal choices.',
       exampleProblems: ['Merge Intervals', 'Non-overlapping Intervals', 'Minimum Number of Arrows to Burst Balloons'],
-      solution: {
+      solutions: [{
         problemTitle: 'Merge Intervals',
         code: `import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,13 +45,13 @@ class Solution {
 // Time Complexity: O(n log n) due to sorting
 // Space Complexity: O(n) for the result list`,
         explanation: 'The greedy strategy is to sort the intervals by their start times. This ensures that when considering an interval, all intervals that could potentially overlap with it and start earlier have already been processed and merged. This ordering allows us to make a simple, locally optimal decision: either merge with the last interval in our result or add a new one.'
-      }
+      }]
     },
     {
       title: 'Farthest Reach / One-Pass Decision',
       description: 'This pattern involves a single pass through an array, making a greedy decision at each step to maximize a certain metric, such as the farthest reachable index. It\'s about trusting that the best local choice (e.g., jumping to extend your reach as far as possible) will lead to the global solution.',
       exampleProblems: ['Jump Game'],
-      solution: {
+      solutions: [{
         problemTitle: 'Jump Game',
         code: `class Solution {
     public boolean canJump(int[] nums) {
@@ -78,13 +78,13 @@ class Solution {
 // Time Complexity: O(n)
 // Space Complexity: O(1)`,
         explanation: 'The greedy choice here is to always know the maximum reach possible from the positions visited so far. At each index `i`, we check if it\'s reachable. If it is, we update our `maxReachable` by taking the jump from `i`. This works because if a path to the end exists, our `maxReachable` will eventually be greater than or equal to the last index. We are always making the locally optimal choice of extending our reach as far as possible.'
-      }
+      }]
     },  
     {
       title: 'Greedy with Heaps (Priority Queues)',
       description: 'In some problems, the best greedy choice is not immediately obvious from a sorted list but is the "best" among a dynamic set of options. A priority queue (heap) is perfect for maintaining this set and efficiently retrieving the best option (e.g., the most frequent task, the smallest element) at each step.',
       exampleProblems: ['Task Scheduler'],
-      solution: {
+      solutions: [{
         problemTitle: 'Task Scheduler',
         code: `import java.util.*;
 
@@ -128,13 +128,13 @@ class Solution {
 // Time Complexity: O(N * log(M)) where N is total tasks, M is unique tasks (max 26)
 // Space Complexity: O(M)`,
         explanation: 'The greedy strategy is to execute the most frequent task at every opportunity to minimize idle time. A max-heap stores task frequencies, so we can always access the most frequent one in O(log M) time. A cooldown queue tracks when tasks can be re-added to the heap. By always prioritizing the highest-frequency task, we ensure the CPU is utilized as much as possible, leading to the shortest overall time.'
-      }
+      }]
     },
     {
       title: 'Greedy Choice Proof & Pitfalls',
       description: 'The hardest part of greedy algorithms is proving their correctness. A greedy choice is valid if it has the "greedy-choice property": a globally optimal solution can be arrived at by making a sequence of locally optimal choices. This contrasts with Dynamic Programming, where the optimal solution depends on the solutions to subproblems, and a simple local choice might not be enough.',  
       exampleProblems: ['Assign Cookies', 'Coin Change'],
-      solution: {
+      solutions: [{
         problemTitle: 'Assign Cookies',
         code: `import java.util.Arrays;
 
@@ -166,7 +166,7 @@ class Solution {
 // Time Complexity: O(n log n + m log m) due to sorting
 // Space Complexity: O(1) or O(log n + log m) depending on sort implementation`,
         explanation: 'The greedy choice is to always try to satisfy the child with the smallest greed factor using the smallest available cookie. Why does this work? By satisfying the least greedy child with the smallest possible cookie, we save larger cookies for greedier children. This "stay ahead" argument ensures we maximize the number of satisfied children. This contrasts with a problem like Coin Change, where greedily picking the largest coin denomination does not guarantee an optimal solution (e.g., for amount=6 and coins=[1, 4, 5], greedy picks 5+1=2 coins, but optimal is 1+5=2 coins, but for amount=8, greedy picks 5+1+1+1=4 coins, but optimal is 4+4=2 coins).'
-      }
+      }]
     }
   ]
 };

@@ -6,7 +6,7 @@ export const data = {
       title: 'Breadth-First Search (BFS) Traversal',
       description: 'A traversal technique that explores tree nodes level by level, using a queue. It is ideal for finding the shortest path on unweighted graphs or trees.',
       exampleProblems: ['Binary Tree Level Order Traversal', 'Binary Tree Zigzag Level Order Traversal', 'Minimum Depth of Binary Tree'],
-      solution: {
+      solutions: [{
         problemTitle: 'Binary Tree Level Order Traversal (BFS)',
         code: `import java.util.*;
 
@@ -35,13 +35,13 @@ class Solution {
 // Time Complexity: O(n)
 // Space Complexity: O(w) where w is the max width of the tree`,
         explanation: 'This BFS solution uses a queue to process nodes level by level. The key is capturing the queue size at the start of each level to ensure the inner loop only processes nodes belonging to that specific level.'
-      }
+      }]
     },
     {
       title: 'Path Sum Variations',
       description: 'A common category of tree problems involving finding paths that sum to a target value. These are typically solved with a recursive DFS approach, passing the current path sum down through the recursive calls.',
       exampleProblems: ['Path Sum', 'Path Sum II', 'Path Sum III', 'Binary Tree Maximum Path Sum'],
-      solution: {
+      solutions: [{
         problemTitle: 'Path Sum',
         code: `class Solution {
     public boolean hasPathSum(TreeNode root, int targetSum) {
@@ -59,13 +59,13 @@ class Solution {
 // Time Complexity: O(n)
 // Space Complexity: O(h) where h is tree height`,
         explanation: 'This recursive DFS solution checks for a root-to-leaf path. At each node, it subtracts the node\'s value from the target sum and recurses on its children. The base case is a leaf node, where it checks if the remaining sum is zero.'
-      }
+      }]
     },
     {
       title: 'Lowest Common Ancestor (LCA)',
       description: 'The LCA of two nodes is the deepest node that has both as descendants. The approach differs for a general binary tree versus a more structured Binary Search Tree.',
       exampleProblems: ['Lowest Common Ancestor of a Binary Tree', 'Lowest Common Ancestor of a Binary Search Tree'],
-      solution: {
+      solutions: [{
         problemTitle: 'Lowest Common Ancestor of a Binary Tree',
         code: `class Solution {
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
@@ -84,13 +84,13 @@ class Solution {
 // Time Complexity: O(n)
 // Space Complexity: O(h) where h is the tree height`,
         explanation: 'This recursive DFS solution finds the LCA by returning a node if it finds `p` or `q`. The first node to receive non-null results from both its left and right children is the LCA, as it is the split point where the paths to `p` and `q` diverge.'
-      }
+      }]
     },
     {
       title: 'BST Validation and Manipulation',
       description: 'Problems involving the properties of a Binary Search Tree, such as validating its structure or performing insertions and deletions while maintaining the BST invariant.',
       exampleProblems: ['Validate Binary Search Tree', 'Insert into a Binary Search Tree', 'Delete Node in a BST'],
-      solution: {
+      solutions: [{
         problemTitle: 'Validate Binary Search Tree',
         code: `class Solution {
     public boolean isValidBST(TreeNode root) {
@@ -110,13 +110,13 @@ class Solution {
 // Time Complexity: O(n)
 // Space Complexity: O(h) where h is tree height`,
         explanation: 'A simple comparison with the immediate parent is insufficient. This robust recursive solution passes down valid range constraints (`lower` and `upper` bounds) for each node. A node is valid only if its value is within this range and its subtrees are also valid with updated bounds.'
-      }
+      }]
     },
     {
       title: 'Serialization and Deserialization',
       description: 'The process of converting a tree into a string representation and vice-versa. A common method is to use a preorder traversal, storing null children with a special marker.',
       exampleProblems: ['Serialize and Deserialize Binary Tree', 'Serialize and Deserialize BST'],
-      solution: {
+      solutions: [{
         problemTitle: 'Serialize and Deserialize Binary Tree',
         code: `public class Codec {
     public String serialize(TreeNode root) {
@@ -154,7 +154,7 @@ class Solution {
 // Time Complexity: O(n) for both operations
 // Space Complexity: O(n) for both operations`,
         explanation: 'This solution uses a preorder DFS traversal. `serialize` builds a string with "N" for null nodes. `deserialize` uses a queue of the split string values to reconstruct the tree in the same preorder fashion, ensuring the structure is perfectly preserved.'
-      }
+      }]
     }
   ]
 };

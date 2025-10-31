@@ -6,7 +6,7 @@ export const data = {
       title: 'Binary Search on Answer',
       description: 'This advanced technique involves performing a binary search on the range of possible answers to a problem, rather than on the input data itself. It is applicable when the problem has a monotonic property.',
       exampleProblems: ['Split Array Largest Sum', 'Koko Eating Bananas', 'Capacity To Ship Packages Within D Days'],
-      solution: {
+      solutions: [{
         problemTitle: 'Split Array Largest Sum',
         code: `class Solution {
     public int splitArray(int[] nums, int k) {
@@ -52,13 +52,13 @@ export const data = {
 // Time Complexity: O(n * log(S)) where S is the sum of array elements
 // Space Complexity: O(1)`,
         explanation: 'This solution binary searches for the minimum possible value of the "largest subarray sum". The `isPossible` helper function greedily checks if a given `maxSumAllowed` is feasible in O(n) time. This transforms the problem into a search over a monotonic answer space.'
-      }
+      }]
     },
     {
       title: 'Backtracking',
       description: 'A methodical way to explore all possible solutions by incrementally building a candidate and abandoning a path ("backtracking") once it\'s clear it cannot lead to a valid solution. It follows a "choose -> explore -> unchoose" pattern.',
       exampleProblems: ['Subsets', 'Combination Sum', 'Permutations', 'Word Search'],
-      solution: {
+      solutions: [{
         problemTitle: 'Subsets',
         code: `import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +87,7 @@ class Solution {
 // Time Complexity: O(n * 2^n)
 // Space Complexity: O(n) for recursion stack`,
         explanation: 'This solution illustrates the core backtracking template. The recursive function explores paths by either including an element or not. The `start` index prevents duplicate subsets and ensures each combination is generated only once.'
-      }
+      }]
     }
   ]
 };

@@ -17,7 +17,8 @@ export const data = {
                    "- **Floor/Ceil:** Floor is the largest element ≤ target (basically one less than a lower bound); Ceil is the smallest ≥ target (a lower bound):contentReference[oaicite:13]{index=13}.\n" +
                    "Logic: At each step compare `arr[mid]` with target. Move `left` or `right` accordingly. Stop when pointers cross.",
       exampleProblems: ["Search an element in sorted array", "Find first and last occurrence of a value"],
-      solution: {
+      // !!! CHANGE HERE: 'solution' is now 'solutions' (an array)
+      solutions: [{
         problemTitle: "Search for a Target in a Sorted Array",
         code: "public int search(int[] arr, int target) {\n" +
               "    int left = 0, right = arr.length - 1;\n" +
@@ -38,7 +39,7 @@ export const data = {
                      "- `mid=1` → `arr[1]=5 < 6`, so set `left=2`.\n" +
                      "- Now `left=2, right=3`, `mid=2` → `arr[2]=6 == target`, return index 2.\n" +
                      "**Complexity:** O(log N) time."
-      }
+      }]
     },
     {
       title: "Binary Search on Rotated Arrays",
@@ -48,7 +49,8 @@ export const data = {
                    "- **Count Rotations:** Equal to the index of the minimum element:contentReference[oaicite:16]{index=16}.\n\n" +
                    "Logic for search: At each step, if `arr[mid] == target`, return it. Otherwise, check if the left half is sorted (`arr[left] <= arr[mid]`); if so and target is in `[arr[left],arr[mid])`, move `right=mid-1`, else `left=mid+1`. If right half is sorted, apply similar logic:contentReference[oaicite:17]{index=17}.",
       exampleProblems: ["Search in a rotated sorted array", "Find minimum in a rotated sorted array"],
-      solution: {
+      // !!! CHANGE HERE: 'solution' is now 'solutions' (an array)
+      solutions: [{
         problemTitle: "Search in Rotated Sorted Array (No Duplicates)",
         code: "public int searchRotated(int[] arr, int target) {\n" +
               "    int left = 0, right = arr.length - 1;\n" +
@@ -77,7 +79,7 @@ export const data = {
                      "Repeat until found or empty.\n\n" +
                      "**Example:** For `arr = [4,5,6,7,0,1,2]`, `target = 0`, the algorithm finds it at index 4.\n" +
                      "**Complexity:** O(log N)."
-      }
+      }]
     },
     {
       title: "Single Non-Duplicate Element",
@@ -86,7 +88,8 @@ export const data = {
                    "- Use binary search on index. Compare `arr[mid]` with `arr[mid^1]` (flips the last bit). If equal, move right; if not, move left:contentReference[oaicite:18]{index=18}.\n\n" +
                    "Once past the unique element, the pairing order shifts:contentReference[oaicite:19]{index=19}.",
       exampleProblems: ["Single element in a sorted array"],
-      solution: {
+      // !!! CHANGE HERE: 'solution' is now 'solutions' (an array)
+      solutions: [{
         problemTitle: "Find the Single Non-Duplicate Element",
         code: "public int singleNonDuplicate(int[] arr) {\n" +
               "    int left = 0, right = arr.length - 1;\n" +
@@ -107,7 +110,7 @@ export const data = {
                      "When `left == right`, that index has the single element.\n\n" +
                      "**Example:** `arr = [1,1,2,3,3]`. We find `2` at index 2.\n" +
                      "**Complexity:** O(log N)."
-      }
+      }]
     },
     {
       title: "Binary Search on Answer (Monotonic Conditions)",
@@ -118,7 +121,8 @@ export const data = {
                    "- **Threshold Checks:** Find smallest divisor given sum threshold:contentReference[oaicite:23]{index=23}, minimum days for bouquets:contentReference[oaicite:24]{index=24}, aggressive cows distance:contentReference[oaicite:25]{index=25}, gas station penalty:contentReference[oaicite:26]{index=26}, etc.\n\n" +
                    "Define a predicate `check(x)`. If `check(x)` is true (feasible), search lower; otherwise search higher. The predicate must be monotonic:contentReference[oaicite:27]{index=27}:contentReference[oaicite:28]{index=28}.",
       exampleProblems: ["Koko Eating Bananas", "Minimum days to make M bouquets"],
-      solution: {
+      // !!! CHANGE HERE: 'solution' is now 'solutions' (an array)
+      solutions: [{
         problemTitle: "Koko Eating Bananas (Binary Search on Rate)",
         code: "public int minEatingSpeed(int[] piles, int h) {\n" +
               "    int lo = 1;\n" +
@@ -134,7 +138,7 @@ export const data = {
               "        if (hours <= h) {\n" +
               "            ans = mid;\n" +
               "            hi = mid - 1;\n" +
-              "        } else {\n" +
+        "        } else {\n" +
               "            lo = mid + 1;\n" +
               "        }\n" +
               "    }\n" +
@@ -145,7 +149,7 @@ export const data = {
                      "- Else `mid` too slow; search higher (`lo = mid + 1`).\n" +
                      "**Example:** `piles=[5,10,3]`, `h=4`. `lo=1, hi=10`. Try `mid=5` → hours=4 (feasible), set `ans=5, hi=4`. Then `mid=2` → hours=10 (not feasible), set `lo=3`, etc. Final answer=5.\n" +
                      "**Complexity:** O(N log M) where M = max(pile)."
-      }
+      }]
     },
     {
       title: "Median / K-th of Two Sorted Arrays",
@@ -153,7 +157,8 @@ export const data = {
                    "Approach: Ensure `A` is the smaller array. Binary search its index `i`, set `j = (n+m+1)/2 - i`. Make sure all elements in left parts (`A[0..i-1]`, `B[0..j-1]`) are ≤ all in right parts (`A[i..]`, `B[j..]`):contentReference[oaicite:31]{index=31}. Then median is max of lefts or average of max left and min right.\n" +
                    "This works in O(log(min(n,m))).",
       exampleProblems: ["Median of two sorted arrays", "Kth element of two sorted arrays"],
-      solution: {
+      // !!! CHANGE HERE: 'solution' is now 'solutions' (an array)
+      solutions: [{
         problemTitle: "Median of Two Sorted Arrays",
         code: "public double findMedianSortedArrays(int[] A, int[] B) {\n" +
               "    int n = A.length, m = B.length;\n" +
@@ -181,7 +186,7 @@ export const data = {
                      "- If valid, median is `max(L1,L2)` (if total length is odd) or average of `max(L1,L2)` and `min(R1,R2)` (if even).\n" +
                      "- If `L1 > R2`, move `hi = midA-1`; else move `lo = midA+1`.\n" +
                      "This finds the correct partition in O(log(min(n,m)))."
-      }
+      }]
     },
     {
       title: "Search in 2D Matrices",
@@ -191,7 +196,8 @@ export const data = {
                    "- **Row with Maximum 1s:** If each row is sorted 0→1, find first 1 via binary search in each row:contentReference[oaicite:34]{index=34}; the row with the earliest 1 has the most ones.\n\n" +
                    "We illustrate searching in a sorted 2D matrix (type I).",
       exampleProblems: ["Search in a 2D matrix (I)", "Search in a 2D matrix (II)"],
-      solution: {
+      // !!! CHANGE HERE: 'solution' is now 'solutions' (an array)
+      solutions: [{
         problemTitle: "Search in a 2D Sorted Matrix",
         code: "public boolean searchMatrix(int[][] matrix, int target) {\n" +
               "    int m = matrix.length;\n" +
@@ -212,7 +218,7 @@ export const data = {
                      "- If equal, return true.\n" +
                      "- If less, search right half (`left = mid + 1`); else search left half.\n" +
                      "**Complexity:** O(log(m*n))."
-      }
+      }]
     }
   ]
 };

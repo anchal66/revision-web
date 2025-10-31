@@ -6,7 +6,7 @@ export const data = {
       title: 'Top K Elements',
       description: 'This pattern uses a min-heap of size K to efficiently find the Kth largest/smallest element or the top K frequent/largest/smallest elements in a collection.',
       exampleProblems: ['Kth Largest Element in an Array', 'Top K Frequent Elements', 'K Closest Points to Origin'],
-      solution: {
+      solutions: [{
         problemTitle: 'Kth Largest Element in an Array',
         code: `import java.util.PriorityQueue;
 
@@ -31,13 +31,13 @@ class Solution {
 // Time Complexity: O(n log k)
 // Space Complexity: O(k)`,
         explanation: 'This solution maintains a min-heap of size `k`. For each number, it adds it to the heap. If the heap grows larger than `k`, the smallest element is removed. This ensures the heap always holds the top `k` largest elements seen so far.'
-      }
+      }]
     },
     {
       title: 'Two Heaps for Median Finding',
       description: 'This pattern is designed for finding the median of a dynamically growing data stream. It uses a max-heap for the smaller half and a min-heap for the larger half, keeping them balanced.',
       exampleProblems: ['Find Median from Data Stream'],
-      solution: {
+      solutions: [{
         problemTitle: 'Find Median from Data Stream',
         code: `import java.util.PriorityQueue;
 import java.util.Collections;
@@ -70,7 +70,7 @@ class MedianFinder {
 // Time Complexity: O(log n) for addNum, O(1) for findMedian
 // Space Complexity: O(n)`,
         explanation: 'This solution uses two heaps to keep the numbers partitioned and balanced. The max-heap stores the smaller half, and the min-heap stores the larger half. This structure ensures the median can always be calculated in constant time from the roots of the heaps.'
-      }
+      }]
     }
   ]
 };

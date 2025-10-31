@@ -6,7 +6,7 @@ export const data = {
       title: 'Monotonic Stack',
       description: 'A stack where elements are always in a sorted order (increasing or decreasing). It is highly effective for problems involving finding the next/previous greater/smaller element.',
       exampleProblems: ['Daily Temperatures', 'Next Greater Element I/II', 'Largest Rectangle in Histogram'],
-      solution: {
+      solutions: [{
         problemTitle: 'Daily Temperatures',
         code: `import java.util.Stack;
 
@@ -36,13 +36,13 @@ class Solution {
 // Time Complexity: O(n)
 // Space Complexity: O(n)`,
         explanation: 'This solution uses a monotonic (decreasing) stack to store the indices of days. When a warmer day is found, indices are popped from the stack, and the waiting days are calculated. This ensures each index is processed in linear time.'
-      }
+      }]
     },
     {
       title: 'Queue for Level-Order Traversal (BFS)',
       description: 'A queue is the cornerstone of the Breadth-First Search (BFS) algorithm. In trees and graphs, a queue is used to explore nodes level by level, which is fundamental for finding the shortest path in unweighted graphs.',
       exampleProblems: ['Binary Tree Level Order Traversal', 'Rotting Oranges', 'Minimum Depth of Binary Tree'],
-      solution: {
+      solutions: [{
         problemTitle: 'Generic BFS Traversal with a Queue',
         code: `import java.util.*;
 
@@ -71,7 +71,7 @@ class GraphTraversal {
 // Time Complexity: O(V + E) where V is vertices, E is edges
 // Space Complexity: O(V)`,
         explanation: 'This generic BFS implementation uses a Queue to store nodes to visit next and a `visited` array to prevent cycles. The FIFO nature of the queue ensures that nodes are processed level by level.'
-      }
+      }]
     }
   ]
 };

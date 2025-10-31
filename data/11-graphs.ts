@@ -6,7 +6,7 @@ export const data = {
       title: 'Graph Traversal (DFS/BFS)',
       description: 'Fundamental techniques to visit every node and edge. DFS uses a stack (often implicit via recursion) to go deep, while BFS uses a queue to explore level by level.',
       exampleProblems: ['Number of Islands', 'Clone Graph', 'Max Area of Island'],
-      solution: {
+      solutions: [{
         problemTitle: 'Number of Islands (DFS)',
         code: `class Solution {
     public int numIslands(char[][] grid) {
@@ -37,13 +37,13 @@ export const data = {
 // Time Complexity: O(M * N)
 // Space Complexity: O(M * N) in worst case for recursion stack`,
         explanation: 'This solution iterates through the grid. When it finds a piece of land (\'1\'), it increments the island count and starts a DFS traversal. The DFS recursively visits all connected land cells, marking them as visited (\'0\') to ensure each island is counted only once.'
-      }
+      }]
     },
     {
       title: 'Topological Sort (Kahn\'s Algorithm)',
       description: 'A linear ordering of nodes in a Directed Acyclic Graph (DAG) where for every edge from `u` to `v`, `u` comes before `v`. Kahn\'s algorithm is a BFS-based approach that uses in-degrees.',
       exampleProblems: ['Course Schedule', 'Course Schedule II', 'Alien Dictionary'],
-      solution: {
+      solutions: [{
         problemTitle: 'Course Schedule II',
         code: `class Solution {
     public int[] findOrder(int numCourses, int[][] prerequisites) {
@@ -82,13 +82,13 @@ export const data = {
 // Time Complexity: O(V + E)
 // Space Complexity: O(V + E)`,
         explanation: 'Kahn\'s algorithm first computes the in-degree of all nodes. It initializes a queue with all nodes having an in-degree of 0. As it processes a node, it decrements the in-degree of its neighbors. If a neighbor\'s in-degree becomes 0, it is added to the queue. A cycle is detected if not all nodes are processed.'
-      }
+      }]
     },
     {
       title: 'Shortest Path: Dijkstra\'s Algorithm',
       description: 'Finds the shortest path from a single source to all other nodes in a weighted graph with non-negative edge weights. It uses a priority queue to greedily select the unvisited node with the smallest distance.',
       exampleProblems: ['Network Delay Time', 'Path with Maximum Probability', 'The Maze II'],
-      solution: {
+      solutions: [{
         problemTitle: 'Network Delay Time',
         code: `class Solution {
     public int networkDelayTime(int[][] times, int n, int k) {
@@ -125,13 +125,13 @@ export const data = {
 // Time Complexity: O(E log V)
 // Space Complexity: O(V + E)`,
         explanation: 'Dijkstra\'s algorithm uses a min-priority queue to always explore the node with the currently shortest known distance from the source. It "relaxes" edges by updating the distances to neighbors if a shorter path is found through the current node.'
-      }
+      }]
     },
     {
       title: 'Union-Find (Disjoint Set Union)',
       description: 'A highly efficient data structure for problems involving partitioning elements into disjoint subsets. It provides near-constant time `find` and `union` operations, perfect for connectivity problems.',
       exampleProblems: ['Number of Connected Components in an Undirected Graph', 'Graph Valid Tree', 'Redundant Connection'],
-      solution: {
+      solutions: [{
         problemTitle: 'Number of Connected Components',
         code: `class Solution {
     public int countComponents(int n, int[][] edges) {
@@ -158,7 +158,7 @@ export const data = {
 // Time Complexity: O(E * α(V)) where α is Inverse Ackermann function
 // Space Complexity: O(V)`,
         explanation: 'This solution initializes each node as its own component. It then iterates through the edges, uniting the components of the two vertices. The `union` operation decrements the component count if two previously separate components are merged. Path compression optimizes the `find` operation.'
-      }
+      }]
     }
   ]
 };

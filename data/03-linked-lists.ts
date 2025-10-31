@@ -10,7 +10,7 @@ export const data = {
         'Remove Linked List Elements (LeetCode 203)',
         'Insert into a Sorted Circular Linked List (LeetCode 708)'
       ],
-      solution: {
+      solutions: [{
         problemTitle: 'Remove Linked List Elements (LeetCode 203)',
         code: `
 public ListNode removeElements(ListNode head, int val) {
@@ -32,7 +32,7 @@ public ListNode removeElements(ListNode head, int val) {
 }
         `,
         explanation: `We create a dummy head node that points to the start of the list to simplify deletion logic (particularly for cases where the head node itself needs to be removed):contentReference[oaicite:1]{index=1}. Then we iterate through the list with a pointer \`current\`. If \`current.next\` has the target value, we bypass that node by pointing \`current.next\` to \`current.next.next\`, effectively removing it. Otherwise, we simply move \`current\` forward. Using the dummy node ensures that even if the original head contains the value to be removed, our loop can handle it uniformly. The result is returned via \`dummy.next\` (which will be the updated head of the list). This runs in O(n) time with O(1) extra space.`
-      }
+      }]
     },
     {
       title: 'Two-pointer Technique (Fast & Slow)',
@@ -44,7 +44,7 @@ public ListNode removeElements(ListNode head, int val) {
         'Palindrome Linked List (LeetCode 234)',
         'Intersection of Two Linked Lists (LeetCode 160)'
       ],
-      solution: {
+      solutions: [{
         problemTitle: 'Linked List Cycle II (LeetCode 142)',
         code: `
 public ListNode detectCycle(ListNode head) {
@@ -69,7 +69,7 @@ public ListNode detectCycle(ListNode head) {
 }
         `,
         explanation: `We use Floyd’s Cycle Detection algorithm. First, we move one pointer (\`slow\`) one step at a time and another pointer (\`fast\`) two steps at a time. If there is a cycle, these pointers will eventually meet inside the loop:contentReference[oaicite:7]{index=7}. Once a meeting point is found, we know a cycle exists. To find the exact starting node of the cycle, we reset one pointer to the head of the list while leaving the other at the meeting point, then move both one step at a time. They will meet again at the beginning of the loop. (This works because the distance from head to the start of the cycle equals the distance from the meeting point to the start of the cycle in terms of number of nodes.) In code, after detecting the cycle, we set \`slow\` back to head and then advance \`slow\` and \`fast\` together until they meet, returning that node. The algorithm runs in O(n) time and uses O(1) space.`
-      }
+      }]
     },
     {
       title: 'In-place Reversal Pattern',
@@ -81,7 +81,7 @@ public ListNode detectCycle(ListNode head) {
         'Reverse Linked List II (LeetCode 92)',
         'Rotate List (LeetCode 61)'
       ],
-      solution: {
+      solutions: [{
         problemTitle: 'Reverse Linked List (LeetCode 206)',
         code: `
 public ListNode reverseList(ListNode head) {
@@ -101,7 +101,7 @@ public ListNode reverseList(ListNode head) {
 }
         `,
         explanation: `We maintain two pointers, \`prev\` and \`curr\`, and iterate through the list, reversing the links as we go:contentReference[oaicite:9]{index=9}. Initially, \`prev = null\` and \`curr = head\`. On each iteration, we store \`curr.next\` in a temporary variable (to not lose track of the remainder of the list), then set \`curr.next = prev\` (this is the actual reversal of the pointer for the current node). Next, we advance \`prev\` to \`curr\`, and \`curr\` to the saved next node. By the time \`curr\` becomes null (end of list), \`prev\` points to the new head (the original tail). This algorithm is O(n) in time and O(1) in space. The same idea can be extended: for example, to reverse nodes in k-group, you would apply this reversal in segments of length k (using loops or recursion to handle each segment).`
-      }
+      }]
     },
     {
       title: 'Partitioning and Reordering',
@@ -113,7 +113,7 @@ public ListNode reverseList(ListNode head) {
         'Sort Linked List of 0s, 1s and 2s (GeeksforGeeks)',
         'Reorder List (LeetCode 143)'
       ],
-      solution: {
+      solutions: [{
         problemTitle: 'Partition List (LeetCode 86)',
         code: `
 public ListNode partition(ListNode head, int x) {
@@ -142,7 +142,7 @@ public ListNode partition(ListNode head, int x) {
 }
         `,
         explanation: `We use two temporary dummy heads (\`beforeHead\` and \`afterHead\`) to build two lists: one for nodes with values less than x, and one for nodes with values greater or equal to x:contentReference[oaicite:11]{index=11}. We traverse the original list once (\`current\` goes through each node). If a node’s value is < x, we attach it to the end of the "before" list; otherwise, we attach it to the "after" list. Dummy head nodes simplify the logic by avoiding special cases for inserting the first node into either list. After the partition loop, we terminate the "after" list by setting its tail’s next to null (to mark the end of the final list). Then we link the two lists by connecting \`before\` list’s tail to \`afterHead.next\` (which is the start of the "after" list). Finally, \`beforeHead.next\` gives the head of the partitioned list. This algorithm runs in O(n) time and uses O(1) extra space (aside from the dummy nodes).`
-      }
+      }]
     },
     {
       title: 'Merging and Sorting',
@@ -153,7 +153,7 @@ public ListNode partition(ListNode head, int x) {
         'Sort List (LeetCode 148)',
         'Flattening a Linked List (GeeksforGeeks)'
       ],
-      solution: {
+      solutions: [{
         problemTitle: 'Merge Two Sorted Lists (LeetCode 21)',
         code: `
 public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
@@ -182,7 +182,7 @@ public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
 }
         `,
         explanation: `This is a classic two-pointer merge routine for sorted lists. We maintain a \`tail\` pointer for the resulting list, and pointers \`a\` and \`b\` for traversing \`list1\` and \`list2\` respectively. At each step, we compare \`a.val\` and \`b.val\`, choose the smaller value, and append that node to the result, advancing the corresponding pointer. This process continues until one list is exhausted, at which point we attach the remaining nodes from the other list (since they are already sorted). Using a dummy head node simplifies the code by handling the head of the result list consistently. Merging two lists is an O(n + m) operation for lists of length n and m:contentReference[oaicite:13]{index=13}. This merging logic is not only useful on its own, but also forms the backbone of a merge sort algorithm on linked lists (where the list is recursively divided and then merged), and it can be adapted to flatten multiple sorted lists by merging them one by one or with a priority queue.`
-      }
+      }]
     },
     {
       title: 'Linked List as Numbers (Arithmetic Operations)',
@@ -192,7 +192,7 @@ public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
         'Add Two Numbers II (LeetCode 445)',
         'Plus One Linked List (LeetCode 369)'
       ],
-      solution: {
+      solutions: [{
         problemTitle: 'Add Two Numbers (LeetCode 2)',
         code: `
 public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
@@ -218,7 +218,7 @@ public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 }
         `,
         explanation: `We use two pointers (\`a\` for \`l1\` and \`b\` for \`l2\`) to traverse the two input numbers, and an integer \`carry\` to keep track of carry-over. On each iteration, we take the current digit from each list (using 0 if we've reached the end of one list) and add them along with the carry:contentReference[oaicite:16]{index=16}. The result's ones place becomes the value of a new node (using \`sum % 10\`), and \`carry\` is updated to \`sum / 10\` (0 or 1, since we’re adding single digits). We then advance in each list. The loop continues as long as there are digits left in either list or a non-zero carry remains. By using a dummy head, we simplify the code for building the result list. In the end, the dummy’s next pointer points to the head of the new linked list representing the sum. This runs in O(max(m, n)) time for input lengths m and n. (For the variant where digits are stored in forward order, one would typically reverse the lists first or use a stack/recursion to handle the addition from the least significant side.)`
-      }
+      }]
     },
     {
       title: 'Advanced Pointers & Structures',
@@ -229,7 +229,7 @@ public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         'Design Skiplist (LeetCode 1206)',
         'LRU Cache (LeetCode 146)'
       ],
-      solution: {
+      solutions: [{
         problemTitle: 'Copy List with Random Pointer (LeetCode 138)',
         code: `
 class Node {
@@ -270,7 +270,7 @@ public Node copyRandomList(Node head) {
 }
         `,
         explanation: `This solution performs a deep copy in O(n) time and O(1) extra space by **interweaving** the original and cloned nodes. In the first pass, we create a copy of each node and insert it immediately after the original node in the list:contentReference[oaicite:21]{index=21}. After this, for every original node \`curr\`, \`curr.next\` is the cloned node. In the second pass, we set the random pointer of each cloned node: if an original node \`curr\` has a random pointer to \`curr.random\`, then \`curr.next.random\` (the copy's random) should point to \`curr.random.next\` (the copy of the random target):contentReference[oaicite:22]{index=22}. Finally, we restore the original list and extract the cloned list in one pass: we separate the intertwined lists by fixing the \`next\` pointers. The dummy head \`dummyHead\` is used to easily build the new list. The result is a completely separate cloned linked list with the same structure as the original. (An alternative approach uses a hash map to store a mapping from original nodes to new nodes:contentReference[oaicite:23]{index=23}, then assigns pointers in a second pass — simpler to implement, but uses O(n) extra space.)`
-      }
+      }]
     }
   ]
 };

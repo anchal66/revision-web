@@ -6,7 +6,7 @@ export const data = {
       title: 'Basic Recurrence (Fibonacci)',
       description: 'This pattern introduces DP with simple problems like computing Fibonacci numbers or climbing stairs. A naive recursive solution recalculates many subproblems, leading to exponential time. DP (via memoization or bottom-up tabulation) saves results and runs in linear time.',
       exampleProblems: ['Nth Fibonacci Number', 'Climbing Stairs'],
-      solution: {
+      solutions: [{
         problemTitle: 'Climbing Stairs',
         code: `class Solution {
     public int climbStairs(int n) {
@@ -25,13 +25,13 @@ export const data = {
 // Time Complexity: O(n)
 // Space Complexity: O(n)`,
         explanation: 'This solution uses a bottom-up DP approach for the climbing stairs problem. Instead of naive recursion (which would recompute subproblems), it builds up an array `dp` where each entry represents the number of ways to reach that step. The recurrence `dp[i] = dp[i-1] + dp[i-2]` mirrors the fact that one can arrive at step `i` from either step `i-1` or `i-2`. By filling this table iteratively, we compute the result in O(n) time without redundant calculations.'
-      }
+      }]
     },
     {
       title: '0/1 Knapsack Pattern',
       description: 'Many subset selection problems follow the 0/1 Knapsack pattern, where each item (or choice) can be taken or not taken (binary decision). Using DP, we can determine the optimal combination to achieve a target (like maximizing value within weight capacity or finding a subset sum). Overlapping subproblems are solved by filling a DP table of subproblem solutions (e.g., solutions for first i items and various weight capacities).',
       exampleProblems: ['0/1 Knapsack Problem', 'Subset Sum Problem', 'Equal Sum Partition', 'Count of Subsets with Given Sum', 'Minimum Subset Sum Difference', 'Count of Subsets with Given Difference', 'Target Sum'],
-      solution: {
+      solutions: [{
         problemTitle: '0/1 Knapsack Problem',
         code: `class Solution {
     public int knapSack(int[] weights, int[] values, int capacity) {
@@ -58,13 +58,13 @@ export const data = {
 // Time Complexity: O(n * capacity)
 // Space Complexity: O(n * capacity)`,
         explanation: 'This bottom-up DP solution uses a 2D table where `dp[i][w]` represents the best (maximum) value achievable using the first `i` items within weight `w`. The transition considers either including the i-th item (if it fits, adding its value and using the solution for the remaining capacity) or excluding it. The table is built iteratively, and `dp[n][capacity]` yields the optimal knapsack value. Variations like subset-sum or partition problems use a similar DP table setup but often track booleans or counts instead of max values.'
-      }
+      }]
     },
     {
       title: 'Unbounded Knapsack Pattern',
       description: 'In unbounded knapsack problems, you can reuse items infinitely. This pattern covers scenarios like coin change or rod cutting, where each item/choice can be picked multiple times. The DP approach usually iterates over capacities and considers the effect of taking each item repeatedly, leading to solutions for maximizing or minimizing objectives under given constraints.',
       exampleProblems: ['Unbounded Knapsack Problem', 'Rod Cutting', 'Coin Change (Max Ways)', 'Coin Change (Min Coins)'],
-      solution: {
+      solutions: [{
         problemTitle: 'Coin Change (Minimum Coins)',
         code: `import java.util.Arrays;
 class Solution {
@@ -84,7 +84,7 @@ class Solution {
 // Time Complexity: O(amount * number_of_coins)
 // Space Complexity: O(amount)`,
         explanation: 'This solution finds the minimum number of coins needed to make up a given amount. It employs an unbounded knapsack approach using a one-dimensional DP array where `dp[x]` represents the minimum coins to achieve amount `x`. By iterating through coin denominations and then through possible amounts, the algorithm allows unlimited use of each coin (since we don’t reset per coin iteration). The result is built up to `dp[amount]`. If `dp[amount]` remains an initialized large value, it means the amount cannot be formed by any combination of coins (and -1 is returned).'
-      }
+      }]
     }
   ]
 };

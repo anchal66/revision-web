@@ -6,7 +6,7 @@ export const data = {
       title: 'Standard Trie Implementation',
       description: 'The fundamental implementation involving a TrieNode class and methods for `insert`, `search`, and `startsWith`. This forms the basis for solving many string and prefix-related problems.',
       exampleProblems: ['Implement Trie (Prefix Tree)', 'Word Search II', 'Design Add and Search Words Data Structure'],
-      solution: {
+      solutions: [{
         problemTitle: 'Implement Trie (Prefix Tree)',
         code: `class TrieNode {
     public TrieNode[] children;
@@ -61,7 +61,7 @@ class Trie {
 // Time Complexity: O(L) for all operations, where L is word length
 // Space Complexity: O(N * L_avg)`,
         explanation: 'This implementation uses a `TrieNode` class with an array of children. The `insert`, `search`, and `startsWith` methods traverse the tree from the root, character by character, to perform their respective operations efficiently.'
-      }
+      }]
     },
   ]
 };

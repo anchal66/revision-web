@@ -1,13 +1,8 @@
+// app/(dsa)/[slug]/page.tsx (Updated)
 import { topics } from "@/data/topics";
 import { notFound } from "next/navigation";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
-import { CodeBlock } from "@/components/CodeBlock";
+import { PatternAccordion } from "@/components/PatternAccordion";
+// Removed Badge/CodeBlock imports since PatternAccordion uses them internally
 
 // This function tells Next.js which pages to build at build time
 export async function generateStaticParams() {
@@ -29,9 +24,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
+// *** REMOVED renderSimpleMarkdown FUNCTION DEFINITION FROM HERE ***
+
 /**
  * Helper function to render simple markdown-like text as HTML.
- * It handles bold, inline code, newlines, and removes contentReference tags.
+ * NOTE: This local version is ONLY for rendering the static 'description'
+ * in this Server Component. The main Accordion rendering uses the function
+ * defined inside PatternAccordion.tsx.
  */
 function renderSimpleMarkdown(text: string): string {
   if (!text) return "";
@@ -42,15 +41,14 @@ function renderSimpleMarkdown(text: string): string {
     .replace(/\n/g, '<br />');                   // Newlines
 }
 
+
 export default async function DsaTopicPage({ params }: { params: { slug: string } }) {
   const resolvedParams = await params;
-  // Handle the case where params.slug is undefined during client-side navigation
   if (!resolvedParams.slug) {
-    return null; // or a loading spinner
+    return null; 
   }
 
   const topicModule = await import(`@/data/${resolvedParams.slug}.ts`);
-  // Handle potential default export wrapping by Next.js
   const topicData = topicModule.default || topicModule;
   const { title, description, patterns } = topicData.data;
 
@@ -58,54 +56,21 @@ export default async function DsaTopicPage({ params }: { params: { slug: string 
     return notFound();
   }
 
+  // The actual rendering logic is moved to the client component
   return (
     <article className="prose dark:prose-invert max-w-none">
       <div className="mb-8">
         <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-2">{title}</h1>
-        {/* UPDATED: Use div with dangerouslySetInnerHTML to render markdown */}
         <div
           className="text-xl text-muted-foreground"
           dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(description) }}
         />
       </div>
 
-      <Accordion type="single" collapsible className="w-full" defaultValue={patterns?.[0]?.title}>
-        {patterns.map((pattern: any) => (
-          <AccordionItem value={pattern.title} key={pattern.title}>
-            <AccordionTrigger className="text-2xl font-semibold hover:no-underline">
-              {pattern.title}
-            </AccordionTrigger>
-            {/* UPDATED: Added prose classes to ensure rendered HTML is styled */}
-            <AccordionContent className="prose-p:text-base prose dark:prose-invert max-w-none">
-              {/* UPDATED: Use div with dangerouslySetInnerHTML */}
-              <div dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(pattern.description) }} />
-              
-              <div className="my-4">
-                <h4 className="font-semibold mb-2">Example Problems:</h4>
-                <div className="flex flex-wrap gap-2">
-                  {pattern.exampleProblems.map((problem: string) => (
-                    <Badge variant="secondary" key={problem}>{problem}</Badge>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-6 p-4 border rounded-lg bg-background">
-                <h4 className="font-semibold text-lg mb-2">Solution Spotlight: {pattern.solution.problemTitle}</h4>
-                {/* UPDATED: Use div, add prose classes, and use dangerouslySetInnerHTML */}
-                <div 
-                  className="text-sm text-muted-foreground mb-4 prose dark:prose-invert max-w-none" 
-                  dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(pattern.solution.explanation) }}
-                />
-                <CodeBlock 
-                  code={pattern.solution.code} 
-                  lang="java"
-                  filename={`${pattern.solution.problemTitle.replace(/\s/g, '')}.java`}
-                />
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+      <PatternAccordion 
+        patterns={patterns} 
+        // *** REMOVED renderSimpleMarkdown prop passing ***
+      />
     </article>
   );
 }
