@@ -80,4 +80,9 @@ export const topics: Topic[] = [
     title: "Spring Data JPA",
     description: "A comprehensive guide to building a Hospital Management System using Spring Data JPA.",
   },
+  {
+    slug: "16-apache-kafka",
+    title: "Apache Kafka",
+    description: "Complete documentation & Spring Boot integration guide for Senior Engineers.",
+  },
 ];
