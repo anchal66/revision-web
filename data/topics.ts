@@ -85,4 +85,9 @@ export const topics: Topic[] = [
     title: "Apache Kafka",
     description: "Complete documentation & Spring Boot integration guide for Senior Engineers.",
   },
+  {
+    slug: "17-aws-architecture",
+    title: "AWS Architecture",
+    description: "Architecting Scalable Cloud Infrastructure & DevOps Pipelines.",
+  },
 ];
