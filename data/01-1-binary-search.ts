@@ -18,7 +18,7 @@ export const data = {
                    "Logic: At each step compare `arr[mid]` with target. Move `left` or `right` accordingly. Stop when pointers cross.",
       exampleProblems: ["Search an element in sorted array", "Find first and last occurrence of a value"],
       solutions: [{
-        problemTitle: "Search for a Target in a Sorted Array",
+        problemTitle: "Search an element in sorted array",
         code: "public int search(int[] arr, int target) {\n" +
               "    int left = 0, right = arr.length - 1;\n" +
               "    while (left <= right) {\n" +
@@ -27,7 +27,7 @@ export const data = {
               "        if (arr[mid] < target) left = mid + 1;\n" +
               "        else right = mid - 1;\n" +
               "    }\n" +
-              "    return -1;  // target not found\n" +
+              "    return -1;\n" +
               "}",
         explanation: "We maintain two pointers `left` and `right`. Compute `mid = (left+right)/2`:\n" +
                      "- If `arr[mid]` equals the target, the element is found.\n" +
@@ -37,6 +37,38 @@ export const data = {
                      "**Dry Run:** For `arr = [2,5,6,8]` and `target = 6`: initially `left=0, right=3`.\n" +
                      "- `mid=1` → `arr[1]=5 < 6`, so set `left=2`.\n" +
                      "- Now `left=2, right=3`, `mid=2` → `arr[2]=6 == target`, return index 2.\n" +
+                     "**Complexity:** O(log N) time."
+      },
+      {
+        problemTitle: "Find first and last occurrence of a value",
+        code: "public int[] findFirstAndLast(int[] arr, int target) {\n" +
+              "    int first = findBound(arr, target, true);\n" +
+              "    if (first == -1) return new int[] {-1, -1};\n" +
+              "    int last = findBound(arr, target, false);\n" +
+              "    return new int[] {first, last};\n" +
+              "}\n\n" +
+              "private int findBound(int[] arr, int target, boolean isFirst) {\n" +
+              "    int left = 0, right = arr.length - 1, result = -1;\n" +
+              "    while (left <= right) {\n" +
+              "        int mid = left + (right - left) / 2;\n" +
+              "        if (arr[mid] == target) {\n" +
+              "            result = mid;\n" +
+              "            if (isFirst) right = mid - 1; // Search left for first occurrence\n" +
+              "            else left = mid + 1; // Search right for last occurrence\n" +
+              "        } else if (arr[mid] < target) {\n" +
+              "            left = mid + 1;\n" +
+              "        } else {\n" +
+              "            right = mid - 1;\n" +
+              "        }\n" +
+              "    }\n" +
+              "    return result;\n" +
+              "}",
+        explanation: "We use a helper function `findBound` to perform binary search twice: once to find the **first occurrence** and once for the **last occurrence**.\n" +
+                     "- To find the first occurrence (`isFirst=true`): When `arr[mid] == target`, we store `mid` as a potential result but continue searching in the left half (`right = mid - 1`) to find an even earlier index.\n" +
+                     "- To find the last occurrence (`isFirst=false`): When `arr[mid] == target`, we store `mid` but continue searching in the right half (`left = mid + 1`) to find a later index.\n\n" +
+                     "**Dry Run:** For `arr = [5,7,7,8,8,10]` and `target = 8`:\n" +
+                     "1. **Find First (8):** `mid` lands on 8. Store index, search left. Eventually finds index 3. **Result: [3, ?]**\n" +
+                     "2. **Find Last (8):** `mid` lands on 8. Store index, search right. Eventually finds index 4. **Result: [3, 4]**\n" +
                      "**Complexity:** O(log N) time."
       }]
     },
@@ -49,7 +81,7 @@ export const data = {
                    "Logic for search: At each step, if `arr[mid] == target`, return it. Otherwise, check if the left half is sorted (`arr[left] <= arr[mid]`); if so and target is in `[arr[left],arr[mid])`, move `right=mid-1`, else `left=mid+1`. If right half is sorted, apply similar logic:contentReference[oaicite:17]{index=17}.",
       exampleProblems: ["Search in a rotated sorted array", "Find minimum in a rotated sorted array"],
       solutions: [{
-        problemTitle: "Search in Rotated Sorted Array (No Duplicates)",
+        problemTitle: "Search in a rotated sorted array",
         code: "public int searchRotated(int[] arr, int target) {\n" +
               "    int left = 0, right = arr.length - 1;\n" +
               "    while (left <= right) {\n" +
@@ -69,13 +101,51 @@ export const data = {
               "            }\n" +
               "        }\n" +
               "    }\n" +
-              "    return -1; // not found\n" +
+              "    return -1;\n" +
               "}",
         explanation: "At each step, determine which half is sorted:\n" +
                      "- If `arr[left] <= arr[mid]`, the left half is sorted. If the target lies between `arr[left]` and `arr[mid]`, search left (`right = mid - 1`); otherwise search right (`left = mid + 1`).\n" +
                      "- Otherwise the right half is sorted. If target lies between `arr[mid]` and `arr[right]`, search right; otherwise left.\n" +
                      "Repeat until found or empty.\n\n" +
-                     "**Example:** For `arr = [4,5,6,7,0,1,2]`, `target = 0`, the algorithm finds it at index 4.\n" +
+                     "**Dry Run:** For `arr = [4,5,6,7,0,1,2]`, `target = 0`, the algorithm finds it at index 4.\n" +
+                     "**Complexity:** O(log N)."
+      },
+      {
+        problemTitle: "Find minimum in a rotated sorted array",
+        code: "public int findMin(int[] nums) {\n" +
+              "    if (nums == null || nums.length == 0) return -1;\n" +
+              "    if (nums.length == 1) return nums[0];\n" +
+              "    int left = 0, right = nums.length - 1;\n" +
+              "    \n" +
+              "    if (nums[left] < nums[right]) { \n" +
+              "        return nums[left]; \n" +
+              "    }\n" +
+              "    \n" +
+              "    while (left <= right) {\n" +
+              "        int mid = left + (right - left) / 2;\n" +
+              "        \n" +
+              "        // Case 1: mid is the smallest element\n" +
+              "        if (mid > 0 && nums[mid] < nums[mid - 1]) {\n" +
+              "            return nums[mid];\n" +
+              "        }\n" +
+              "        \n" +
+              "        // Case 2: Left half is sorted, min must be in the right half\n" +
+              "        if (nums[left] <= nums[mid]) {\n" +
+              "            left = mid + 1;\n" +
+              "        } \n" +
+              "        // Case 3: Right half is sorted, min must be in the left half\n" +
+              "        else {\n" +
+              "            right = mid - 1;\n" +
+              "        }\n" +
+              "    }\n" +
+              "    return -1; // Should not be reached\n" +
+              "}",
+        explanation: "The minimum element is the only element that is smaller than its predecessor. We exploit the rotation:\n" +
+                     "- **Base Case:** If the array is fully sorted (`nums[left] < nums[right]`), the minimum is `nums[left]`.\n" +
+                     "- **Pivot Check:** If `nums[mid] < nums[mid - 1]`, then `nums[mid]` is the minimum.\n" +
+                     "- **Search Direction:** If the left half is sorted (`nums[left] <= nums[mid]`), the pivot (min) must be in the unsorted right half, so we move `left = mid + 1`. Otherwise, the right half is sorted, and the min is in the left half, so we move `right = mid - 1`.\n\n" +
+                     "**Dry Run:** For `arr = [4,5,1,2,3]`:\n" +
+                     "- `left=0, right=4`. `mid=2` (value 1). `nums[2] < nums[1]` (1 < 5) is TRUE. Return 1.\n" +
                      "**Complexity:** O(log N)."
       }]
     },
@@ -86,9 +156,8 @@ export const data = {
                    "- Use binary search on index. Compare `arr[mid]` with `arr[mid^1]` (flips the last bit). If equal, move right; if not, move left:contentReference[oaicite:18]{index=18}.\n\n" +
                    "Once past the unique element, the pairing order shifts:contentReference[oaicite:19]{index=19}.",
       exampleProblems: ["Single element in a sorted array"],
-      // !!! CHANGE HERE: 'solution' is now 'solutions' (an array)
       solutions: [{
-        problemTitle: "Find the Single Non-Duplicate Element",
+        problemTitle: "Single element in a sorted array",
         code: "public int singleNonDuplicate(int[] arr) {\n" +
               "    int left = 0, right = arr.length - 1;\n" +
               "    while (left < right) {\n" +
@@ -106,7 +175,7 @@ export const data = {
                      "- If they match, the single element is to the right of `mid+1`; set `left = mid + 2`.\n" +
                      "- If they differ, it's at `mid` or to the left; set `right = mid`.\n" +
                      "When `left == right`, that index has the single element.\n\n" +
-                     "**Example:** `arr = [1,1,2,3,3]`. We find `2` at index 2.\n" +
+                     "**Dry Run:** `arr = [1,1,2,3,3,4,4]`. `left=0, right=6`. `mid=3` (odd) → `mid=2` (value 2). `arr[2] != arr[3]` (2 != 3). `right=2`. Next iteration: `left=0, right=2`. `mid=1` (odd) → `mid=0` (value 1). `arr[0] == arr[1]` (1 == 1). `left=2`. Loop ends: `left=2, right=2`. Return `arr[2]` (value 2).\n" +
                      "**Complexity:** O(log N)."
       }]
     },
@@ -119,9 +188,8 @@ export const data = {
                    "- **Threshold Checks:** Find smallest divisor given sum threshold:contentReference[oaicite:23]{index=23}, minimum days for bouquets:contentReference[oaicite:24]{index=24}, aggressive cows distance:contentReference[oaicite:25]{index=25}, gas station penalty:contentReference[oaicite:26]{index=26}, etc.\n\n" +
                    "Define a predicate `check(x)`. If `check(x)` is true (feasible), search lower; otherwise search higher. The predicate must be monotonic:contentReference[oaicite:27]{index=27}:contentReference[oaicite:28]{index=28}.",
       exampleProblems: ["Koko Eating Bananas", "Minimum days to make M bouquets"],
-      // !!! CHANGE HERE: 'solution' is now 'solutions' (an array)
       solutions: [{
-        problemTitle: "Koko Eating Bananas (Binary Search on Rate)",
+        problemTitle: "Koko Eating Bananas",
         code: "public int minEatingSpeed(int[] piles, int h) {\n" +
               "    int lo = 1;\n" +
               "    int hi = 0;\n" +
@@ -131,7 +199,7 @@ export const data = {
               "        int mid = lo + (hi - lo) / 2;\n" +
               "        long hours = 0;\n" +
               "        for (int p : piles) {\n" +
-              "            hours += (p + mid - 1) / mid; // ceil(p/mid)\n" +
+              "            hours += (p + mid - 1) / mid;\n" +
               "        }\n" +
               "        if (hours <= h) {\n" +
               "            ans = mid;\n" +
@@ -145,8 +213,48 @@ export const data = {
         explanation: "Binary search on eating speed `k`. Compute total hours at speed `mid` by summing `ceil(pile/mid)`:contentReference[oaicite:29]{index=29}:\n" +
                      "- If `hours <= h`, `mid` is feasible; record it and search lower (`hi = mid - 1`).\n" +
                      "- Else `mid` too slow; search higher (`lo = mid + 1`).\n" +
-                     "**Example:** `piles=[5,10,3]`, `h=4`. `lo=1, hi=10`. Try `mid=5` → hours=4 (feasible), set `ans=5, hi=4`. Then `mid=2` → hours=10 (not feasible), set `lo=3`, etc. Final answer=5.\n" +
+                     "**Dry Run:** `piles=[5,10,3]`, `h=4`. `lo=1, hi=10`. Try `mid=5` → hours=4 (feasible), set `ans=5, hi=4`. Then `mid=2` → hours=10 (not feasible), set `lo=3`, etc. Final answer=5.\n" +
                      "**Complexity:** O(N log M) where M = max(pile)."
+      },
+      {
+        problemTitle: "Minimum days to make M bouquets",
+        code: "public int minDays(int[] bloomDay, int m, int k) {\n" +
+              "    if ((long)m * k > bloomDay.length) return -1;\n" +
+              "    int low = 1, high = 1000000000, ans = high;\n" +
+              "    while (low <= high) {\n" +
+              "        int mid = low + (high - low) / 2;\n" +
+              "        if (isFeasible(bloomDay, m, k, mid)) {\n" +
+              "            ans = mid;\n" +
+              "            high = mid - 1;\n" +
+              "        } else {\n" +
+              "            low = mid + 1;\n" +
+              "        }\n" +
+              "    }\n" +
+              "    return ans;\n" +
+              "}\n\n" +
+              "private boolean isFeasible(int[] arr, int m, int k, int days) {\n" +
+              "    int bouquets = 0, flowers = 0;\n" +
+              "    for (int bloom : arr) {\n" +
+              "        if (bloom <= days) {\n" +
+              "            flowers++;\n" +
+              "            if (flowers == k) {\n" +
+              "                bouquets++;\n" +
+              "                flowers = 0;\n" +
+              "            }\n" +
+              "        } else {\n" +
+              "            flowers = 0;\n" +
+              "        }\n" +
+              "    }\n" +
+              "    return bouquets >= m;\n" +
+              "}",
+        explanation: "We search for the minimum required day (`ans`) in the range of possible days (1 to max bloom day). The feasibility check (`isFeasible`) determines if we can make `m` bouquets by day `mid`.\n" +
+                     "- **Feasibility Check:** Iterate through `bloomDay`. If a flower blooms by day `mid`, count it. If `k` consecutive flowers bloom, increment `bouquets` and reset the count.\n" +
+                     "- **Binary Search:** If `isFeasible` is true, we might find a smaller day, so we save `ans = mid` and search left (`high = mid - 1`). Otherwise, we need more time, so search right (`low = mid + 1`).\n\n" +
+                     "**Dry Run:** `bloomDay = [1,10,3,10,2]`, `m=3`, `k=1`. We need 3 bouquets of 1 flower.\n" +
+                     "- Search space `[1, 10]`. Try `mid=5`. Feasible check for day 5: [Bloom, No, Bloom, No, Bloom]. Bouquets = 3. Feasible. `ans=5, high=4`.\n" +
+                     "- Try `mid=2`. Feasible check for day 2: [Bloom, No, No, No, Bloom]. Bouquets = 2. NOT feasible. `low=3`.\n" +
+                     "- ...  3 days.\n" +
+                     "**Complexity:** O(N log D) where D is the range of bloom days."
       }]
     },
     {
@@ -155,35 +263,78 @@ export const data = {
                    "Approach: Ensure `A` is the smaller array. Binary search its index `i`, set `j = (n+m+1)/2 - i`. Make sure all elements in left parts (`A[0..i-1]`, `B[0..j-1]`) are ≤ all in right parts (`A[i..]`, `B[j..]`):contentReference[oaicite:31]{index=31}. Then median is max of lefts or average of max left and min right.\n" +
                    "This works in O(log(min(n,m))).",
       exampleProblems: ["Median of two sorted arrays", "Kth element of two sorted arrays"],
-      // !!! CHANGE HERE: 'solution' is now 'solutions' (an array)
       solutions: [{
-        problemTitle: "Median of Two Sorted Arrays",
+        problemTitle: "Median of two sorted arrays",
         code: "public double findMedianSortedArrays(int[] A, int[] B) {\n" +
               "    int n = A.length, m = B.length;\n" +
               "    if (n > m) return findMedianSortedArrays(B, A);\n" +
               "    int lo = 0, hi = n;\n" +
+              "    int halfLen = (n + m + 1) / 2;\n" +
               "    while (lo <= hi) {\n" +
-              "        int midA = (lo + hi) / 2;\n" +
-              "        int midB = (n + m + 1) / 2 - midA;\n" +
+              "        int midA = lo + (hi - lo) / 2;\n" +
+              "        int midB = halfLen - midA;\n" +
+              "        \n" +
               "        int L1 = (midA == 0) ? Integer.MIN_VALUE : A[midA-1];\n" +
               "        int R1 = (midA == n) ? Integer.MAX_VALUE : A[midA];\n" +
               "        int L2 = (midB == 0) ? Integer.MIN_VALUE : B[midB-1];\n" +
               "        int R2 = (midB == m) ? Integer.MAX_VALUE : B[midB];\n" +
+              "        \n" +
               "        if (L1 <= R2 && L2 <= R1) {\n" +
+              "            // Correct partition found\n" +
               "            if ((n + m) % 2 == 1) return Math.max(L1, L2);\n" +
               "            return (Math.max(L1, L2) + Math.min(R1, R2)) / 2.0;\n" +
               "        } else if (L1 > R2) {\n" +
+              "            // A's left partition is too big, move A's cut left\n" +
               "            hi = midA - 1;\n" +
               "        } else {\n" +
+              "            // A's left partition is too small, move A's cut right\n" +
               "            lo = midA + 1;\n" +
               "        }\n" +
               "    }\n" +
-              "    return 0.0; // should never happen\n" +
+              "    return 0.0;\n" +
               "}",
-        explanation: "Binary search on the smaller array `A`. Let `i=midA`, `j=(n+m+1)/2 - i`. `L1,R1` are values around `i` in `A`, `L2,R2` around `j` in `B`. We want `L1 ≤ R2` and `L2 ≤ R1`:contentReference[oaicite:32]{index=32}:\n" +
-                     "- If valid, median is `max(L1,L2)` (if total length is odd) or average of `max(L1,L2)` and `min(R1,R2)` (if even).\n" +
-                     "- If `L1 > R2`, move `hi = midA-1`; else move `lo = midA+1`.\n" +
-                     "This finds the correct partition in O(log(min(n,m)))."
+        explanation: "Binary search on the smaller array `A`. We determine the partition index `midA` in `A`, and `midB` in `B` is derived to ensure total elements on the left side (`midA + midB`) equals `(n+m+1)/2`.\n" +
+                     "We need to satisfy the condition: `max(L1, L2) <= min(R1, R2)`.\n" +
+                     "- If `L1 > R2`, we cut too many small elements from `A`, so we search left (`hi = midA - 1`).\n" +
+                     "- If `L2 > R1`, we cut too few small elements from `A`, so we search right (`lo = midA + 1`).\n" +
+                     "- If valid, the median is calculated from the maximum of the left partitions (`L1, L2`) and the minimum of the right partitions (`R1, R2`).\n" +
+                     "**Complexity:** O(log(min(n,m)))."
+      },
+      {
+        problemTitle: "Kth element of two sorted arrays",
+        code: "public int findKthElement(int[] A, int[] B, int k) {\n" +
+              "    int n = A.length, m = B.length;\n" +
+              "    if (n > m) return findKthElement(B, A, k);\n" +
+              "    \n" +
+              "    // Search space for partition in A is [max(0, k-m), min(k, n)]\n" +
+              "    int low = Math.max(0, k - m);\n" +
+              "    int high = Math.min(k, n);\n" +
+              "    \n" +
+              "    while (low <= high) {\n" +
+              "        int midA = low + (high - low) / 2; // Partition size in A\n" +
+              "        int midB = k - midA;              // Partition size in B\n" +
+              "        \n" +
+              "        int L1 = (midA == 0) ? Integer.MIN_VALUE : A[midA - 1];\n" +
+              "        int R1 = (midA == n) ? Integer.MAX_VALUE : A[midA];\n" +
+              "        int L2 = (midB == 0) ? Integer.MIN_VALUE : B[midB - 1];\n" +
+              "        int R2 = (midB == m) ? Integer.MAX_VALUE : B[midB];\n" +
+              "        \n" +
+              "        if (L1 <= R2 && L2 <= R1) {\n" +
+              "            // Partition is correct: k-th element is max of left parts\n" +
+              "            return Math.max(L1, L2);\n" +
+              "        } else if (L1 > R2) {\n" +
+              "            high = midA - 1;\n" +
+              "        } else {\n" +
+              "            low = midA + 1;\n" +
+              "        }\n" +
+              "    }\n" +
+              "    return -1; // Should not be reached\n" +
+              "}",
+        explanation: "This is a direct application of the Median approach. We search for partitions `midA` and `midB` such that `midA + midB = k`. This means the `k`-th element will be among the elements `A[0...midA-1]` and `B[0...midB-1]`.\n" +
+                     "The condition for the correct partition remains `L1 <= R2` and `L2 <= R1`.\n" +
+                     "- Once the correct partition is found, the **k-th element** is simply the largest element in the combined left partition: `max(L1, L2)`.\n" +
+                     "- The search space for `midA` is constrained by $k$: we need at least $k-m$ elements from $A$ (if $B$ contributes its max $m$ elements) and at most $\min(k, n)$ elements from $A$.\n" +
+                     "**Complexity:** O(log(min(n,m)))."
       }]
     },
     {
@@ -194,9 +345,8 @@ export const data = {
                    "- **Row with Maximum 1s:** If each row is sorted 0→1, find first 1 via binary search in each row:contentReference[oaicite:34]{index=34}; the row with the earliest 1 has the most ones.\n\n" +
                    "We illustrate searching in a sorted 2D matrix (type I).",
       exampleProblems: ["Search in a 2D matrix (I)", "Search in a 2D matrix (II)"],
-      // !!! CHANGE HERE: 'solution' is now 'solutions' (an array)
       solutions: [{
-        problemTitle: "Search in a 2D Sorted Matrix",
+        problemTitle: "Search in a 2D matrix (I)",
         code: "public boolean searchMatrix(int[][] matrix, int target) {\n" +
               "    int m = matrix.length;\n" +
               "    if (m == 0) return false;\n" +
@@ -216,6 +366,39 @@ export const data = {
                      "- If equal, return true.\n" +
                      "- If less, search right half (`left = mid + 1`); else search left half.\n" +
                      "**Complexity:** O(log(m*n))."
+      },
+      {
+        problemTitle: "Search in a 2D matrix (II)",
+        code: "public boolean searchMatrix2(int[][] matrix, int target) {\n" +
+              "    int m = matrix.length;\n" +
+              "    if (m == 0) return false;\n" +
+              "    int n = matrix[0].length;\n" +
+              "    \n" +
+              "    int row = 0;\n" +
+              "    int col = n - 1;\n" +
+              "    \n" +
+              "    while (row < m && col >= 0) {\n" +
+              "        if (matrix[row][col] == target) {\n" +
+              "            return true;\n" +
+              "        } else if (matrix[row][col] < target) {\n" +
+              "            // Current value is too small, eliminate the current row\n" +
+              "            row++;\n" +
+              "        } else {\n" +
+              "            // Current value is too large, eliminate the current column\n" +
+              "            col--;\n" +
+              "        }\n" +
+              "    }\n" +
+              "    return false;\n" +
+              "}",
+        explanation: "This problem uses the **Staircase Search** pattern, which is $O(m+n)$ and is suitable when rows and columns are sorted, but there's no global sorted property (Type II matrices).\n" +
+                     "1. Start at the top-right corner (`row=0, col=n-1`).\n" +
+                     "2. If `matrix[row][col] == target`, return true.\n" +
+                     "3. If `matrix[row][col] < target`, move down (`row++`) because the entire current row to the left has smaller values.\n" +
+                     "4. If `matrix[row][col] > target`, move left (`col--`) because the entire current column below has larger values.\n\n" +
+                     "**Dry Run:** `matrix = [[1,4],[2,5]]`, `target=5`.\n" +
+                     "- Start: `(0, 1)`, value 4. $4 < 5$, move `row++`.\n" +
+                     "- Next: `(1, 1)`, value 5. $5 == 5$. Return True.\n" +
+                     "**Complexity:** O(M + N)."
       }]
     }
   ]

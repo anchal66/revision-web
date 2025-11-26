@@ -75,4 +75,9 @@ export const topics: Topic[] = [
     title: "DP Part 3",
     description: "The most general data structure, capable of modeling arbitrary relationships.",
   },
+  {
+    slug: "15-spring-data-jpa",
+    title: "Spring Data JPA",
+    description: "A comprehensive guide to building a Hospital Management System using Spring Data JPA.",
+  },
 ];
