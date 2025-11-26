@@ -1,6 +1,6 @@
 export const data = {
-    title: 'Spring Data JPA: Hospital Management System Guide',
-    description: 'A comprehensive guide to building a Hospital Management System using Spring Data JPA. This documentation covers architecture, project configuration, entity mapping, query strategies, and advanced performance optimization patterns.',
+    title: 'Spring Data JPA: Advanced Guide & Senior Interview Prep',
+    description: 'A comprehensive revision guide for Senior Software Engineers covering advanced Spring Data JPA concepts, performance tuning, architecture patterns, and critical interview questions.',
     patterns: [
         {
             title: '1. Introduction & Architecture',
@@ -254,6 +254,200 @@ public class AppointmentService {
         `,
                 explanation: '`@Transactional` ensures that if any line fails, the entire operation (including the patient lookup and appointment save) is rolled back, maintaining database integrity.'
             }]
+        },
+        {
+            title: '8. Performance Optimization: Batch Processing',
+            description: `
+By default, Hibernate executes one SQL statement per entity operation. Batch processing groups these operations to reduce network round-trips.
+
+**Key Configuration (\`application.properties\`):**
+* \`spring.jpa.properties.hibernate.jdbc.batch_size=50\`
+* \`spring.jpa.properties.hibernate.order_inserts=true\`
+* \`spring.jpa.properties.hibernate.order_updates=true\`
+
+**Constraint:** Batching is automatically disabled if you use \`GenerationType.IDENTITY\`. You must use \`SEQUENCE\` or \`TABLE\` strategies for batch inserts to work.
+`,
+            exampleProblems: [
+                'Inserting 10,000 records takes too long due to individual network calls',
+                'Memory overflows during bulk processing'
+            ],
+            solutions: [{
+                problemTitle: 'Bulk Insert with Batching',
+                code: `
+// 1. Entity configuration for Batching
+@Entity
+public class AuditLog {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "log_seq")
+    @SequenceGenerator(name = "log_seq", sequenceName = "log_sequence", allocationSize = 50)
+    private Long id;
+    
+    private String message;
+}
+
+// 2. Service Layer logic to flush batches to clear memory
+@Transactional
+public void saveLogs(List<AuditLog> logs) {
+    int batchSize = 50;
+    for (int i = 0; i < logs.size(); i++) {
+        repository.save(logs.get(i));
+        
+        // Explicitly flush and clear to free up heap memory
+        if (i > 0 && i % batchSize == 0) {
+            entityManager.flush();
+            entityManager.clear();
+        }
+    }
+}
+        `,
+                explanation: 'We use `SEQUENCE` generation to allow Hibernate to pre-allocate IDs. The explicit `flush()` and `clear()` prevents the Persistence Context from growing indefinitely during large loops, avoiding `OutOfMemoryError`.'
+            }]
+        },
+        {
+            title: '9. Caching Strategies (L1 & L2)',
+            description: `
+Caching reduces database load by storing frequently accessed data in memory.
+
+**Levels of Caching:**
+1.  **L1 Cache (Session Level):** Enabled by default. Scoped to the transaction. Cannot be disabled.
+2.  **L2 Cache (SessionFactory Level):** Shared across transactions/users. Requires external provider (Ehcache, Redis, Hazelcast).
+
+
+`,
+            exampleProblems: [
+                'Repeatedly fetching static configuration data hits the DB every time',
+                'Reducing read latency for high-traffic endpoints'
+            ],
+            solutions: [{
+                problemTitle: 'Enabling L2 Cache with Ehcache',
+                code: `
+// 1. Add dependencies: hibernate-jcache, ehcache
+
+// 2. Configure properties
+// spring.jpa.properties.hibernate.cache.use_second_level_cache=true
+// spring.jpa.properties.hibernate.cache.region.factory_class=jcache
+
+// 3. Annotate Entity
+@Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class StaticConfig {
+    @Id 
+    private Long id;
+    private String configKey;
+    private String value;
+}
+        `,
+                explanation: '`READ_WRITE` strategy is safe for data that changes occasionally. `READ_ONLY` is faster but throws an exception if you try to modify the entity.'
+            }]
+        },
+        {
+            title: '10. Concurrency Control: Locking',
+            description: `
+Handling multiple users modifying the same data simultaneously.
+
+**Types:**
+* **Optimistic Locking:** Uses a \`@Version\` column. No DB locks. Throws \`OptimisticLockException\` on conflict. Best for high read/low write.
+* **Pessimistic Locking:** Uses Database row locks (\`SELECT ... FOR UPDATE\`). Blocks other transactions. Best for high contention.
+`,
+            exampleProblems: [
+                'Lost Update Problem (Last commit wins)',
+                'preventing double-booking in a ticket system'
+            ],
+            solutions: [{
+                problemTitle: 'Pessimistic vs Optimistic Examples',
+                code: `
+// OPTIMISTIC LOCKING
+@Entity
+public class Ticket {
+    @Id private Long id;
+    
+    @Version // Hibernate handles the check automatically
+    private Integer version; 
+}
+
+// PESSIMISTIC LOCKING (Repository Level)
+public interface TicketRepository extends JpaRepository<Ticket, Long> {
+    
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT t FROM Ticket t WHERE t.id = :id")
+    Optional<Ticket> findByIdWithLock(@Param("id") Long id);
+}
+        `,
+                explanation: 'Use `@Version` for most cases. Use `PESSIMISTIC_WRITE` when you absolutely cannot afford a collision retry, such as financial ledger updates.'
+            }]
+        },
+        {
+            title: '11. Auditing',
+            description: `
+Automatically tracking "Who" created/modified a record and "When".
+`,
+            exampleProblems: [
+                'Manually setting createdAt and updatedAt in every service method',
+                'Standardizing compliance tracking'
+            ],
+            solutions: [{
+                problemTitle: 'Spring Data JPA Auditing',
+                code: `
+// 1. Enable Auditing in Main Class
+@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
+@SpringBootApplication
+public class App { ... }
+
+// 2. Create Entity Listener
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+@Data
+public abstract class Auditable {
+    
+    @CreatedDate
+    @Column(updatable = false)
+    private Instant createdAt;
+
+    @LastModifiedDate
+    private Instant updatedAt;
+
+    @CreatedBy
+    private String createdBy;
+
+    @LastModifiedBy
+    private String lastModifiedBy;
+}
+
+// 3. Provide the "Current User"
+@Component("auditorProvider")
+public class AuditorAwareImpl implements AuditorAware<String> {
+    @Override
+    public Optional<String> getCurrentAuditor() {
+        // Fetch user from Security Context
+        return Optional.of(SecurityContextHolder.getContext().getAuthentication().getName());
+    }
+}
+        `,
+                explanation: 'By extending the `Auditable` class, all your entities automatically get tracking columns without polluting your business logic code.'
+            }]
+        }
+    ],
+    faqs: [
+        {
+            question: 'What is the "LazyInitializationException" and how do you fix it?',
+            answer: 'It occurs when you try to access a Lazy-loaded collection (like `getAppointments()`) *after* the Hibernate Session has closed. **Fixes:** 1) Use `JOIN FETCH` in your query to load data eagerly. 2) keep the transaction open (not recommended for View layer). 3) Use EntityGraphs.'
+        },
+        {
+            question: 'Difference between `save()` and `saveAndFlush()`?',
+            answer: '`save()` keeps the change in memory (Persistent Context) and syncs with DB only at the end of the transaction. `saveAndFlush()` forces an immediate SQL execution, which is useful if subsequent logic relies on database triggers or if you need to catch constraint violations immediately.'
+        },
+        {
+            question: 'How do you handle the "N+1 Select Problem"?',
+            answer: 'This happens when fetching N entities triggers 1 query for the list and N separate queries for related children. **Solution:** Use `@Query("SELECT p FROM Patient p JOIN FETCH p.appointments")` or `@EntityGraph`.'
+        },
+        {
+            question: 'Why utilize DTO Projections over Entities for read-only views?',
+            answer: 'Entities are "expensive" because Hibernate tracks their state (Snapshots) for dirty checking. DTOs bypass the Persistence Context overhead, resulting in significantly lower memory usage and faster CPU processing for read-heavy operations.'
+        },
+        {
+            question: 'Explain the difference between `getOne()` (now `getReferenceById`) and `findById()`.',
+            answer: '`findById()` hits the database immediately and returns the actual Entity. `getReferenceById()` returns a **Proxy** (a placeholder) without hitting the DB. The DB is only hit when you access a property of that proxy. Useful for setting Foreign Keys without fetching the entire parent object.'
         }
     ]
 };

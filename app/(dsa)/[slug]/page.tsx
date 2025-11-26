@@ -45,7 +45,7 @@ function renderSimpleMarkdown(text: string): string {
 export default async function DsaTopicPage({ params }: { params: { slug: string } }) {
   const resolvedParams = await params;
   if (!resolvedParams.slug) {
-    return null; 
+    return null;
   }
 
   const topicModule = await import(`@/data/${resolvedParams.slug}.ts`);
@@ -67,10 +67,26 @@ export default async function DsaTopicPage({ params }: { params: { slug: string 
         />
       </div>
 
-      <PatternAccordion 
-        patterns={patterns} 
-        // *** REMOVED renderSimpleMarkdown prop passing ***
+      <PatternAccordion
+        patterns={patterns}
       />
+
+      {topicData.data.faqs && topicData.data.faqs.length > 0 && (
+        <div className="mt-12">
+          <h2 className="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
+          <div className="space-y-6">
+            {topicData.data.faqs.map((faq: any, index: number) => (
+              <div key={index} className="border rounded-lg p-6 bg-card">
+                <h3 className="text-xl font-semibold mb-2">{faq.question}</h3>
+                <div
+                  className="text-muted-foreground"
+                  dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(faq.answer) }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </article>
   );
 }
