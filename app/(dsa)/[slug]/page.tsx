@@ -1,8 +1,8 @@
-// app/(dsa)/[slug]/page.tsx (Updated)
 import { topics } from "@/data/topics";
 import { notFound } from "next/navigation";
 import { PatternAccordion } from "@/components/PatternAccordion";
-// Removed Badge/CodeBlock imports since PatternAccordion uses them internally
+import { TheoryViewer } from "@/components/TheoryViewer";
+import { renderSimpleMarkdown } from "@/lib/utils";
 
 // This function tells Next.js which pages to build at build time
 export async function generateStaticParams() {
@@ -24,25 +24,31 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-// *** REMOVED renderSimpleMarkdown FUNCTION DEFINITION FROM HERE ***
-
-import { renderSimpleMarkdown } from "@/lib/utils";
-
 export default async function DsaTopicPage({ params }: { params: { slug: string } }) {
   const resolvedParams = await params;
   if (!resolvedParams.slug) {
     return null;
   }
 
+  const topicInfo = topics.find((t) => t.slug === resolvedParams.slug);
+  if (!topicInfo) {
+    return notFound();
+  }
+
   const topicModule = await import(`@/data/${resolvedParams.slug}.ts`);
   const topicData = topicModule.default || topicModule;
-  const { title, description, patterns } = topicData.data;
+  const { title, description, patterns, faqs } = topicData.data;
 
   if (!title) {
     return notFound();
   }
 
-  // The actual rendering logic is moved to the client component
+  // Conditional Rendering based on Topic Type
+  if (topicInfo.type === 'theory') {
+    return <TheoryViewer data={topicData.data} />;
+  }
+
+  // Default DSA Rendering
   return (
     <article className="prose dark:prose-invert max-w-none">
       <div className="mb-8">
@@ -57,11 +63,12 @@ export default async function DsaTopicPage({ params }: { params: { slug: string 
         patterns={patterns}
       />
 
-      {topicData.data.faqs && topicData.data.faqs.length > 0 && (
+      {faqs && faqs.length > 0 && (
         <div className="mt-12">
           <h2 className="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
           <div className="space-y-4">
-            {topicData.data.faqs.map((faq: any, index: number) => (
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {faqs.map((faq: any, index: number) => (
               <details key={index} className="group border rounded-lg bg-card open:ring-2 open:ring-primary/20 transition-all duration-200">
                 <summary className="flex items-center justify-between p-6 cursor-pointer list-none font-semibold text-lg select-none">
                   <span>{faq.question}</span>

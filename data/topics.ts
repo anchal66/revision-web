@@ -2,6 +2,7 @@ export interface Topic {
   slug: string;
   title: string;
   description: string;
+  type: 'dsa' | 'theory';
 }
 
 export const topics: Topic[] = [
@@ -9,90 +10,108 @@ export const topics: Topic[] = [
     slug: "01-arrays-and-hashing",
     title: "Arrays & Hashing",
     description: "The foundational tools for a vast category of interview problems.",
+    type: 'dsa',
   },
   {
     slug: "01-1-binary-search",
     title: "Binary Search",
     description: "Binary Search patterns",
+    type: 'dsa',
   },
   {
     slug: "02-stacks-and-queues",
     title: "Stacks & Queues",
     description: "Mechanisms to enforce order and process elements in specific sequences.",
+    type: 'dsa',
   },
   {
     slug: "03-linked-lists",
     title: "Linked Lists",
     description: "Test a candidate's ability to manipulate pointers and manage memory references.",
+    type: 'dsa',
   },
   {
     slug: "04-strings",
     title: "Strings",
     description: "Often serve as a medium to test other algorithmic patterns.",
+    type: 'dsa',
   },
   {
     slug: "05-searching-and-recursion",
     title: "Searching & Recursion",
     description: "Crucial for solving optimization and combinatorial problems.",
+    type: 'dsa',
   },
   {
     slug: "06-greedy-algorithms",
     title: "Greedy Algorithms",
     description: "Construct a solution by making a sequence of locally optimal choices.",
+    type: 'dsa',
   },
   {
     slug: "08-trees",
     title: "Trees",
     description: "Hierarchical data structures that test recursion and traversal.",
+    type: 'dsa',
   },
   {
     slug: "09-heaps",
     title: "Heaps",
     description: "A specialized tree-based data structure for efficient min/max retrieval.",
+    type: 'dsa',
   },
   {
     slug: "10-tries",
     title: "Tries",
     description: "A specialized tree for efficient storage and retrieval of strings.",
+    type: 'dsa',
   },
   {
     slug: "11-graphs",
     title: "Graphs",
     description: "The most general data structure, capable of modeling arbitrary relationships.",
+    type: 'dsa',
   },
   {
     slug: "12-dynamic-programming-part-1",
     title: "DP Part 1",
     description: "An optimization technique for problems with optimal substructure.",
+    type: 'dsa',
   },
   {
     slug: "13-dynamic-programming-part-2",
     title: "DP Part 2",
     description: "The most general data structure, capable of modeling arbitrary relationships.",
+    type: 'dsa',
   },
   {
     slug: "14-dynamic-programming-part-3",
     title: "DP Part 3",
     description: "The most general data structure, capable of modeling arbitrary relationships.",
+    type: 'dsa',
   },
   {
     slug: "15-spring-data-jpa",
     title: "Spring Data JPA",
     description: "A comprehensive guide to building a Hospital Management System using Spring Data JPA.",
+    type: 'theory',
   },
   {
     slug: "16-apache-kafka",
     title: "Apache Kafka",
     description: "Complete documentation & Spring Boot integration guide for Senior Engineers.",
+    type: 'theory',
   },
   {
     slug: '17-aws-architecture',
     title: 'AWS Architecture & Cloud Design Patterns',
-    description: 'A comprehensive guide to AWS services, High Availability architectures, and Cloud Design Patterns for Senior Engineers.'
+    description: 'A comprehensive guide to AWS services, High Availability architectures, and Cloud Design Patterns for Senior Engineers.',
+    type: 'theory',
   },
   {
     slug: '18-java-language',
     title: 'Java Language Architecture',
-    description: 'Deep dive into JVM internals, Memory Model, OOP Pillars, and Modern Java features for Senior Engineering roles.'
+    description: 'Deep dive into JVM internals, Memory Model, OOP Pillars, and Modern Java features for Senior Engineering roles.',
+    type: 'theory',
   }
 ];

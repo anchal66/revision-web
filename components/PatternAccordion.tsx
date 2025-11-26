@@ -1,7 +1,7 @@
 // PatternAccordion.tsx (Final Update with Primary Button)
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -61,7 +61,7 @@ export function PatternAccordion({ patterns }: PatternAccordionProps) {
     if (!pattern) return;
 
     // Determine the title to set based on existence, using the primary as fallback
-    let newActiveTitle = pattern.solutions.some(
+    const newActiveTitle = pattern.solutions.some(
       (sol) => sol.problemTitle === clickedProblemTitle
     )
       ? clickedProblemTitle // Clicked problem has a unique solution

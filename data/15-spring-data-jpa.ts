@@ -1,10 +1,12 @@
-export const data = {
+import { TheoryTopicData } from './types';
+
+export const data: TheoryTopicData = {
     title: 'Spring Data JPA: Advanced Guide & Senior Interview Prep',
     description: 'A comprehensive revision guide for Senior Software Engineers covering advanced Spring Data JPA concepts, performance tuning, architecture patterns, and critical interview questions.',
-    patterns: [
+    sections: [
         {
             title: '1. Introduction & Architecture',
-            description: `
+            content: `
 Spring Data JPA is an abstraction layer that sits on top of JPA (Jakarta Persistence API) to reduce boilerplate code.
 
 **The Persistence Stack:**
@@ -18,15 +20,14 @@ Spring Data JPA is an abstraction layer that sits on top of JPA (Jakarta Persist
 * **Detached:** Session closed, changes not tracked.
 * **Removed:** Scheduled for deletion.
 
+### Example Problems
+- Understanding the difference between Hibernate and Spring Data JPA
+- Managing Entity Lifecycle States (Transient vs Persistent)
 
-`,
-            exampleProblems: [
-                'Understanding the difference between Hibernate and Spring Data JPA',
-                'Managing Entity Lifecycle States (Transient vs Persistent)'
-            ],
-            solutions: [{
-                problemTitle: 'Visualizing the Entity Lifecycle',
-                code: `
+### Solutions
+
+#### Visualizing the Entity Lifecycle
+\`\`\`java
 // 1. Transient
 Patient p = new Patient(); 
 p.setName("John");
@@ -39,27 +40,28 @@ patientRepository.save(p);
 // 3. Detached
 // If the transaction ends or session closes, "p" becomes detached.
 // Changes to "p" are no longer tracked.
-        `,
-                explanation: 'Understanding these states is crucial for predicting when SQL queries (INSERT/UPDATE) are actually fired against the database.'
-            }]
+\`\`\`
+Understanding these states is crucial for predicting when SQL queries (INSERT/UPDATE) are actually fired against the database.
+`
         },
         {
             title: '2. Project Setup & Configuration',
-            description: `
+            content: `
 Setup for a Spring Boot project using PostgreSQL and Lombok.
 
 **Key Dependencies:**
 * \`spring-boot-starter-data-jpa\`
 * \`postgresql\` (Driver)
 * \`lombok\`
-      `,
-            exampleProblems: [
-                'Configuring Database Connection',
-                'Setting Hibernate DDL Auto modes'
-            ],
-            solutions: [{
-                problemTitle: 'application.properties Configuration',
-                code: `
+
+### Example Problems
+- Configuring Database Connection
+- Setting Hibernate DDL Auto modes
+
+### Solutions
+
+#### application.properties Configuration
+\`\`\`properties
 # Database Connection
 spring.datasource.url=jdbc:postgresql://localhost:5432/hospitaldb
 spring.datasource.username=postgres
@@ -74,22 +76,23 @@ spring.jpa.properties.hibernate.format_sql=true
 # Data Initialization
 spring.jpa.defer-datasource-initialization=true
 spring.sql.init.mode=always
-        `,
-                explanation: 'This configuration connects the app to a local PostgreSQL instance and ensures the schema is updated automatically (\`ddl-auto=update\`) based on your Entity classes.'
-            }]
+\`\`\`
+This configuration connects the app to a local PostgreSQL instance and ensures the schema is updated automatically (\`ddl-auto=update\`) based on your Entity classes.
+`
         },
         {
             title: '3. Entities & Basic Mapping',
-            description: `
+            content: `
 Entities represent database tables. This section covers basic annotations like \`@Entity\`, \`@Id\`, and \`@Column\`.
-`,
-            exampleProblems: [
-                'Mapping a Java class to a Database Table',
-                'Handling Enums properly in Databases'
-            ],
-            solutions: [{
-                problemTitle: 'Patient Entity Definition',
-                code: `
+
+### Example Problems
+- Mapping a Java class to a Database Table
+- Handling Enums properly in Databases
+
+### Solutions
+
+#### Patient Entity Definition
+\`\`\`java
 @Entity
 @Table(name = "patient")
 @Data // Lombok for Getters/Setters
@@ -110,23 +113,24 @@ public class Patient {
     @Transient // Not stored in DB
     private int calculatedAge; 
 }
-        `,
-                explanation: 'The `@Entity` annotation marks this class for persistence. `@Enumerated(EnumType.STRING)` is best practice for readability in the database compared to ordinal values.'
-            }]
+\`\`\`
+The \`@Entity\` annotation marks this class for persistence. \`@Enumerated(EnumType.STRING)\` is best practice for readability in the database compared to ordinal values.
+`
         },
         {
             title: '4. Repositories & Querying Strategies',
-            description: `
+            content: `
 The \`JpaRepository\` interface provides built-in CRUD. You can extend this with Derived Queries, JPQL, Native SQL, and Projections.
-`,
-            exampleProblems: [
-                'Writing queries without SQL (Derived Methods)',
-                'Optimizing reads with Projections (DTOs)',
-                'Handling Pagination'
-            ],
-            solutions: [{
-                problemTitle: 'Repository Pattern Examples',
-                code: `
+
+### Example Problems
+- Writing queries without SQL (Derived Methods)
+- Optimizing reads with Projections (DTOs)
+- Handling Pagination
+
+### Solutions
+
+#### Repository Pattern Examples
+\`\`\`java
 public interface PatientRepository extends JpaRepository<Patient, Long> {
     
     // 1. Derived Query Method
@@ -145,32 +149,28 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     @Query("SELECT new com.example.dto.PatientSummary(p.name, p.email) FROM Patient p")
     List<PatientSummary> findAllSummaries();
 }
-        `,
-                explanation: 'Derived methods are great for simple queries. Use JPQL for complex object-oriented queries, and Projections/DTOs when you need to fetch only specific columns to save memory.'
-            }]
+\`\`\`
+Derived methods are great for simple queries. Use JPQL for complex object-oriented queries, and Projections/DTOs when you need to fetch only specific columns to save memory.
+`
         },
         {
             title: '5. Entity Relationships (Mappings)',
-            description: `
+            content: `
 Defining how tables relate to one another is the core of ORM.
-
-
-
-[Image of Hospital ER Diagram]
-
 
 **Relationship Types:**
 * **One-to-One:** Patient ↔ Insurance
 * **One-to-Many:** Patient ↔ Appointment (The "Many" side usually owns the FK)
 * **Many-to-Many:** Doctor ↔ Department (Requires a Join Table)
-`,
-            exampleProblems: [
-                'Mapping Parent-Child relationships',
-                'Handling Join Tables'
-            ],
-            solutions: [{
-                problemTitle: 'Mapping One-to-Many (Patient ↔ Appointment)',
-                code: `
+
+### Example Problems
+- Mapping Parent-Child relationships
+- Handling Join Tables
+
+### Solutions
+
+#### Mapping One-to-Many (Patient ↔ Appointment)
+\`\`\`java
 // 1. The Child (Owning Side - Holds Foreign Key)
 @Entity
 public class Appointment {
@@ -185,53 +185,55 @@ public class Patient {
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private List<Appointment> appointments;
 }
-        `,
-                explanation: 'The `@ManyToOne` side is generally the owning side. `mappedBy` on the parent tells Hibernate that the relationship is already managed by the `patient` field in the `Appointment` class.'
-            }]
+\`\`\`
+The \`@ManyToOne\` side is generally the owning side. \`mappedBy\` on the parent tells Hibernate that the relationship is already managed by the \`patient\` field in the \`Appointment\` class.
+`
         },
         {
             title: '6. Advanced Concepts & Optimization',
-            description: `
+            content: `
 Optimizing Hibernate for production involves handling Cascades, Fetch Types, and the N+1 problem.
 
 **Key Concepts:**
 * **Cascading:** Propagating state changes (e.g., Deleting Parent deletes Child).
 * **Orphan Removal:** Deleting a child just by removing it from the list.
 * **Fetch Types:** Lazy (Load on demand) vs Eager (Load immediately).
-`,
-            exampleProblems: [
-                'Solving the N+1 Select Problem',
-                'Preventing accidental data loading (Lazy vs Eager)'
-            ],
-            solutions: [{
-                problemTitle: 'Solving the N+1 Problem with JOIN FETCH',
-                code: `
+
+### Example Problems
+- Solving the N+1 Select Problem
+- Preventing accidental data loading (Lazy vs Eager)
+
+### Solutions
+
+#### Solving the N+1 Problem with JOIN FETCH
+\`\`\`java
 // BAD: Triggers 1 query for Patients + N queries for their Appointments
 List<Patient> patients = repository.findAll();
 
 // GOOD: Fetches Patients and Appointments in a SINGLE query
 @Query("SELECT p FROM Patient p LEFT JOIN FETCH p.appointments")
 List<Patient> findAllWithAppointments();
-        `,
-                explanation: 'The N+1 problem occurs when you fetch a list of parents, and then iterate to access their lazy-loaded children. `JOIN FETCH` solves this by retrieving the graph in one SQL statement.'
-            }]
+\`\`\`
+The N+1 problem occurs when you fetch a list of parents, and then iterate to access their lazy-loaded children. \`JOIN FETCH\` solves this by retrieving the graph in one SQL statement.
+`
         },
         {
             title: '7. Service Layer & Transactions',
-            description: `
+            content: `
 The Service layer handles business logic and transaction boundaries.
 
 **Features:**
 * **@Transactional:** Ensures atomicity.
 * **Dirty Checking:** Modifying an entity inside a transaction updates the DB without calling \`save()\`.
-`,
-            exampleProblems: [
-                'Creating complex entities transactionally',
-                'Updating data without explicit save calls'
-            ],
-            solutions: [{
-                problemTitle: 'Transactional Appointment Creation',
-                code: `
+
+### Example Problems
+- Creating complex entities transactionally
+- Updating data without explicit save calls
+
+### Solutions
+
+#### Transactional Appointment Creation
+\`\`\`java
 @Service
 @RequiredArgsConstructor
 public class AppointmentService {
@@ -251,13 +253,13 @@ public class AppointmentService {
         appointmentRepo.save(appointment);
     }
 }
-        `,
-                explanation: '`@Transactional` ensures that if any line fails, the entire operation (including the patient lookup and appointment save) is rolled back, maintaining database integrity.'
-            }]
+\`\`\`
+\`@Transactional\` ensures that if any line fails, the entire operation (including the patient lookup and appointment save) is rolled back, maintaining database integrity.
+`
         },
         {
             title: '8. Performance Optimization: Batch Processing',
-            description: `
+            content: `
 By default, Hibernate executes one SQL statement per entity operation. Batch processing groups these operations to reduce network round-trips.
 
 **Key Configuration (\`application.properties\`):**
@@ -266,14 +268,15 @@ By default, Hibernate executes one SQL statement per entity operation. Batch pro
 * \`spring.jpa.properties.hibernate.order_updates=true\`
 
 **Constraint:** Batching is automatically disabled if you use \`GenerationType.IDENTITY\`. You must use \`SEQUENCE\` or \`TABLE\` strategies for batch inserts to work.
-`,
-            exampleProblems: [
-                'Inserting 10,000 records takes too long due to individual network calls',
-                'Memory overflows during bulk processing'
-            ],
-            solutions: [{
-                problemTitle: 'Bulk Insert with Batching',
-                code: `
+
+### Example Problems
+- Inserting 10,000 records takes too long due to individual network calls
+- Memory overflows during bulk processing
+
+### Solutions
+
+#### Bulk Insert with Batching
+\`\`\`java
 // 1. Entity configuration for Batching
 @Entity
 public class AuditLog {
@@ -299,28 +302,27 @@ public void saveLogs(List<AuditLog> logs) {
         }
     }
 }
-        `,
-                explanation: 'We use `SEQUENCE` generation to allow Hibernate to pre-allocate IDs. The explicit `flush()` and `clear()` prevents the Persistence Context from growing indefinitely during large loops, avoiding `OutOfMemoryError`.'
-            }]
+\`\`\`
+We use \`SEQUENCE\` generation to allow Hibernate to pre-allocate IDs. The explicit \`flush()\` and \`clear()\` prevents the Persistence Context from growing indefinitely during large loops, avoiding \`OutOfMemoryError\`.
+`
         },
         {
             title: '9. Caching Strategies (L1 & L2)',
-            description: `
+            content: `
 Caching reduces database load by storing frequently accessed data in memory.
 
 **Levels of Caching:**
 1.  **L1 Cache (Session Level):** Enabled by default. Scoped to the transaction. Cannot be disabled.
 2.  **L2 Cache (SessionFactory Level):** Shared across transactions/users. Requires external provider (Ehcache, Redis, Hazelcast).
 
+### Example Problems
+- Repeatedly fetching static configuration data hits the DB every time
+- Reducing read latency for high-traffic endpoints
 
-`,
-            exampleProblems: [
-                'Repeatedly fetching static configuration data hits the DB every time',
-                'Reducing read latency for high-traffic endpoints'
-            ],
-            solutions: [{
-                problemTitle: 'Enabling L2 Cache with Ehcache',
-                code: `
+### Solutions
+
+#### Enabling L2 Cache with Ehcache
+\`\`\`java
 // 1. Add dependencies: hibernate-jcache, ehcache
 
 // 2. Configure properties
@@ -337,26 +339,27 @@ public class StaticConfig {
     private String configKey;
     private String value;
 }
-        `,
-                explanation: '`READ_WRITE` strategy is safe for data that changes occasionally. `READ_ONLY` is faster but throws an exception if you try to modify the entity.'
-            }]
+\`\`\`
+\`READ_WRITE\` strategy is safe for data that changes occasionally. \`READ_ONLY\` is faster but throws an exception if you try to modify the entity.
+`
         },
         {
             title: '10. Concurrency Control: Locking',
-            description: `
+            content: `
 Handling multiple users modifying the same data simultaneously.
 
 **Types:**
 * **Optimistic Locking:** Uses a \`@Version\` column. No DB locks. Throws \`OptimisticLockException\` on conflict. Best for high read/low write.
 * **Pessimistic Locking:** Uses Database row locks (\`SELECT ... FOR UPDATE\`). Blocks other transactions. Best for high contention.
-`,
-            exampleProblems: [
-                'Lost Update Problem (Last commit wins)',
-                'preventing double-booking in a ticket system'
-            ],
-            solutions: [{
-                problemTitle: 'Pessimistic vs Optimistic Examples',
-                code: `
+
+### Example Problems
+- Lost Update Problem (Last commit wins)
+- preventing double-booking in a ticket system
+
+### Solutions
+
+#### Pessimistic vs Optimistic Examples
+\`\`\`java
 // OPTIMISTIC LOCKING
 @Entity
 public class Ticket {
@@ -373,22 +376,23 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query("SELECT t FROM Ticket t WHERE t.id = :id")
     Optional<Ticket> findByIdWithLock(@Param("id") Long id);
 }
-        `,
-                explanation: 'Use `@Version` for most cases. Use `PESSIMISTIC_WRITE` when you absolutely cannot afford a collision retry, such as financial ledger updates.'
-            }]
+\`\`\`
+Use \`@Version\` for most cases. Use \`PESSIMISTIC_WRITE\` when you absolutely cannot afford a collision retry, such as financial ledger updates.
+`
         },
         {
             title: '11. Auditing',
-            description: `
+            content: `
 Automatically tracking "Who" created/modified a record and "When".
-`,
-            exampleProblems: [
-                'Manually setting createdAt and updatedAt in every service method',
-                'Standardizing compliance tracking'
-            ],
-            solutions: [{
-                problemTitle: 'Spring Data JPA Auditing',
-                code: `
+
+### Example Problems
+- Manually setting createdAt and updatedAt in every service method
+- Standardizing compliance tracking
+
+### Solutions
+
+#### Spring Data JPA Auditing
+\`\`\`java
 // 1. Enable Auditing in Main Class
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 @SpringBootApplication
@@ -423,9 +427,9 @@ public class AuditorAwareImpl implements AuditorAware<String> {
         return Optional.of(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 }
-        `,
-                explanation: 'By extending the `Auditable` class, all your entities automatically get tracking columns without polluting your business logic code.'
-            }]
+\`\`\`
+By extending the \`Auditable\` class, all your entities automatically get tracking columns without polluting your business logic code.
+`
         }
     ],
     faqs: [

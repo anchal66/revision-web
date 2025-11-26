@@ -1,10 +1,12 @@
-export const data = {
+import { TheoryTopicData } from './types';
+
+export const data: TheoryTopicData = {
     title: 'AWS: Architecting Scalable Cloud Infrastructure & DevOps',
     description: 'A definitive documentation manual for deploying enterprise-grade cloud infrastructure. Covers deep-dive VPC networking (CIDR math), EC2 virtualization, IAM security perimeters, Auto Scaling logic, and "Code-to-Cloud" CI/CD pipelines.',
-    patterns: [
+    sections: [
         {
             title: '1. Foundations of Cloud Computing',
-            description: `
+            content: `
 **The Cloud Paradigm:**
 Transition from Capital Expense (CapEx - Data Centers) to Operational Expense (OpEx - Pay-as-you-go).
 
@@ -19,14 +21,15 @@ AWS uses a **Hypervisor** to partition physical hardware (Bare Metal) into isola
 **Global Infrastructure:**
 *   **Regions:** Physical clusters of data centers (e.g., \`us-east-1\` N. Virginia).
 *   **Availability Zones (AZs):** Discrete data centers within a Region with redundant power/networking (e.g., \`us-east-1a\`, \`us-east-1b\`). Architectures must span multiple AZs for fault tolerance.
-`,
-            exampleProblems: [
-                'Understanding the difference between IaaS and PaaS',
-                'Designing for Region-level vs AZ-level failure'
-            ],
-            solutions: [{
-                problemTitle: 'Shared Responsibility Model',
-                code: `
+
+### Example Problems
+- Understanding the difference between IaaS and PaaS
+- Designing for Region-level vs AZ-level failure
+
+### Solutions
+
+#### Shared Responsibility Model
+\`\`\`text
 # AWS Responsibility (Security OF the Cloud)
 - Physical Hardware (Data Centers, Generators)
 - Network Infrastructure (Cabling, Routers)
@@ -37,13 +40,13 @@ AWS uses a **Hypervisor** to partition physical hardware (Bare Metal) into isola
 - Firewall Configuration (Security Groups)
 - IAM User Management & Access Keys
 - Data Encryption (At rest and in transit)
-        `,
-                explanation: 'Security is a shared duty. AWS secures the facility; you secure the door to your virtual server.'
-            }]
+\`\`\`
+Security is a shared duty. AWS secures the facility; you secure the door to your virtual server.
+`
         },
         {
             title: '2. Identity and Access Management (IAM)',
-            description: `
+            content: `
 **The Security Perimeter:**
 *   **Root Account:** Has unlimited privileges. Protect with MFA. **Never** use for daily tasks.
 *   **IAM Users:** Distinct identities for people or services.
@@ -58,14 +61,15 @@ AWS uses a **Hypervisor** to partition physical hardware (Bare Metal) into isola
 
 **Programmatic Access:**
 Uses **Access Key ID** and **Secret Access Key**. These are sensitive secrets (like username/password) and must **never** be hardcoded in code.
-`,
-            exampleProblems: [
-                'Granting S3 access to a CI/CD pipeline',
-                'Enforcing Least Privilege'
-            ],
-            solutions: [{
-                problemTitle: 'Least Privilege S3 Policy',
-                code: `
+
+### Example Problems
+- Granting S3 access to a CI/CD pipeline
+- Enforcing Least Privilege
+
+### Solutions
+
+#### Least Privilege S3 Policy
+\`\`\`json
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -83,13 +87,13 @@ Uses **Access Key ID** and **Secret Access Key**. These are sensitive secrets (l
         }
     ]
 }
-        `,
-                explanation: 'This policy restricts the CI/CD user to ONLY the specific actions needed for deployment and ONLY on the target bucket.'
-            }]
+\`\`\`
+This policy restricts the CI/CD user to ONLY the specific actions needed for deployment and ONLY on the target bucket.
+`
         },
         {
             title: '3. Advanced Networking: Custom VPC Design',
-            description: `
+            content: `
 **CIDR Planning (The Math):**
 *   **VPC CIDR:** \`10.0.0.0/16\`. The \`/16\` fixes the first 16 bits, leaving 16 bits for hosts. $2^{16} = 65,536$ IPs.
 *   **Subnet CIDR:** \`10.0.0.0/20\`. The \`/20\` fixes 20 bits, leaving 12 bits. $2^{12} = 4,096$ IPs per subnet.
@@ -101,14 +105,15 @@ Uses **Access Key ID** and **Secret Access Key**. These are sensitive secrets (l
 
 **Route Tables:**
 The *only* difference between Public and Private subnets is the Route Table association.
-`,
-            exampleProblems: [
-                'Calculating available IPs for a subnet',
-                'Allowing private servers to download updates securely'
-            ],
-            solutions: [{
-                problemTitle: 'Route Table Configuration Matrix',
-                code: `
+
+### Example Problems
+- Calculating available IPs for a subnet
+- Allowing private servers to download updates securely
+
+### Solutions
+
+#### Route Table Configuration Matrix
+\`\`\`text
 # 1. Public Route Table (Associated with Public Subnets)
 Destination    Target         Description
 10.0.0.0/16    local          Inter-VPC traffic
@@ -118,13 +123,13 @@ Destination    Target         Description
 Destination    Target         Description
 10.0.0.0/16    local          Inter-VPC traffic
 0.0.0.0/0      nat-xxxxxx     Traffic to Internet via NAT Gateway
-        `,
-                explanation: 'The NAT Gateway must reside in a Public Subnet (to reach the IGW). Private instances route 0.0.0.0/0 to the NAT GW, which proxies the traffic to the internet.'
-            }]
+\`\`\`
+The NAT Gateway must reside in a Public Subnet (to reach the IGW). Private instances route 0.0.0.0/0 to the NAT GW, which proxies the traffic to the internet.
+`
         },
         {
             title: '4. Compute: EC2 & Bootstrapping',
-            description: `
+            content: `
 **Amazon Machine Images (AMI):** The blueprint (OS + App Server).
 **Instance Types:** e.g., \`t2.micro\`. "Burstable" instances earn CPU credits when idle and spend them during spikes.
 
@@ -137,14 +142,15 @@ Automating server setup using shell scripts executed by \`cloud-init\` on first 
 Stateful firewalls at the instance level.
 *   **SSH/RDP:** Restrict Source to "My IP" to prevent brute-force.
 *   **HTTP:** Open to 0.0.0.0/0 (or restricted to Load Balancer SG).
-`,
-            exampleProblems: [
-                'Automating Linux Web Server Setup',
-                'Configuring Windows IIS manually'
-            ],
-            solutions: [{
-                problemTitle: 'Linux User Data Script',
-                code: `
+
+### Example Problems
+- Automating Linux Web Server Setup
+- Configuring Windows IIS manually
+
+### Solutions
+
+#### Linux User Data Script
+\`\`\`bash
 #!/bin/bash
 # 1. Update & Install Apache
 yum update -y
@@ -156,13 +162,13 @@ systemctl enable httpd
 
 # 3. Create Content (Dynamic Hostname for LB Verification)
 echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
-        `,
-                explanation: 'This script converts a raw Linux VM into a functional web server automatically. Including `$(hostname -f)` helps visually verify that the Load Balancer is distributing traffic across different servers.'
-            }]
+\`\`\`
+This script converts a raw Linux VM into a functional web server automatically. Including \`$(hostname -f)\` helps visually verify that the Load Balancer is distributing traffic across different servers.
+`
         },
         {
             title: '5. High Availability: ALB & Auto Scaling',
-            description: `
+            content: `
 **Application Load Balancer (ALB):**
 Layer 7 (HTTP/HTTPS) traffic distributor.
 *   **Listener:** Listens on Port 80.
@@ -177,14 +183,15 @@ Manages fleet capacity.
 
 **Stress Testing:**
 Validating the ASG requires artificially spiking CPU load using tools like \`stress\` or a PHP loop.
-`,
-            exampleProblems: [
-                'Designing a self-healing architecture',
-                'Validating scaling logic with load tests'
-            ],
-            solutions: [{
-                problemTitle: 'PHP Stress Test Script',
-                code: `
+
+### Example Problems
+- Designing a self-healing architecture
+- Validating scaling logic with load tests
+
+### Solutions
+
+#### PHP Stress Test Script
+\`\`\`bash
 # Create a CPU-intensive script
 cat > stress.php <<EOF
 <?php
@@ -197,13 +204,13 @@ EOF
 
 # Execute to spike CPU to 100%
 php stress.php
-        `,
-                explanation: 'Running this script forces the CPU to 100%. CloudWatch aggregates this metric. Once the average crosses the 30% threshold, the ASG Alarm fires, launching new instances.'
-            }]
+\`\`\`
+Running this script forces the CPU to 100%. CloudWatch aggregates this metric. Once the average crosses the 30% threshold, the ASG Alarm fires, launching new instances.
+`
         },
         {
             title: '6. Storage: S3 Static Hosting',
-            description: `
+            content: `
 **S3 (Simple Storage Service):** Object storage.
 **Static Hosting:** Hosting HTML/CSS/JS without servers.
 
@@ -213,14 +220,15 @@ php stress.php
 3.  **Versioning:** Enable to retain history. Allows rollback if a bad deployment occurs.
 
 **Endpoint:** AWS generates a URL like \`http://bucket-name.s3-website-us-east-1.amazonaws.com\`.
-`,
-            exampleProblems: [
-                'Hosting a website for pennies',
-                'Recovering from accidental file deletion'
-            ],
-            solutions: [{
-                problemTitle: 'S3 Bucket Policy for Public Access',
-                code: `
+
+### Example Problems
+- Hosting a website for pennies
+- Recovering from accidental file deletion
+
+### Solutions
+
+#### S3 Bucket Policy for Public Access
+\`\`\`json
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -233,13 +241,13 @@ php stress.php
         }
     ]
 }
-        `,
-                explanation: 'The `/*` suffix is critical; it applies the permission to ALL objects within the bucket, not just the bucket itself.'
-            }]
+\`\`\`
+The \`/*\` suffix is critical; it applies the permission to ALL objects within the bucket, not just the bucket itself.
+`
         },
         {
             title: '7. CI/CD: GitHub Actions Pipeline',
-            description: `
+            content: `
 **Philosophy:**
 *   **CI:** Frequent merges to \`main\`.
 *   **CD:** Automated deployment to production (S3).
@@ -253,14 +261,15 @@ php stress.php
 **Key Arguments:**
 *   \`--acl public-read\`: Forces uploaded objects to be public (overriding defaults).
 *   \`--delete\`: Removes files in S3 that no longer exist in the repo (exact mirroring).
-`,
-            exampleProblems: [
-                'Automating deployments securely',
-                'Preventing "orphan" files in S3'
-            ],
-            solutions: [{
-                problemTitle: 'GitHub Actions Workflow',
-                code: `
+
+### Example Problems
+- Automating deployments securely
+- Preventing "orphan" files in S3
+
+### Solutions
+
+#### GitHub Actions Workflow
+\`\`\`yaml
 name: Deploy Portfolio to S3
 on:
   push:
@@ -284,9 +293,9 @@ jobs:
         AWS_SECRET_ACCESS_KEY: \${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: 'us-east-1'
         SOURCE_DIR: './website'
-        `,
-                explanation: 'This pipeline listens for pushes to main. It checks out the code and syncs the `./website` directory to S3. The `--delete` flag ensures that if you delete a file locally, it is also deleted from the live site.'
-            }]
+\`\`\`
+This pipeline listens for pushes to main. It checks out the code and syncs the \`./website\` directory to S3. The \`--delete\` flag ensures that if you delete a file locally, it is also deleted from the live site.
+`
         }
     ],
     faqs: [

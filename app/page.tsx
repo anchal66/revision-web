@@ -1,35 +1,19 @@
 import { topics } from "@/data/topics";
-import Link from "next/link";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
+import { TopicBrowser } from "@/components/TopicBrowser";
 
 export default function Home() {
   return (
-    <div className="w-full">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">
-          DSA Revision Pattern
+    <div className="container mx-auto py-12 px-4 max-w-7xl">
+      <div className="text-center mb-16 space-y-4">
+        <h1 className="text-5xl font-extrabold tracking-tight lg:text-6xl bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+          DSA Revision
         </h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          A curated collection of essential DSA patterns for senior software engineer interviews.
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          A comprehensive collection of Data Structures, Algorithms, and System Design patterns for your interview preparation.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {topics.map((topic) => (
-          <Link href={`/${topic.slug}`} key={topic.slug}>
-            <Card className="h-full hover:border-primary transition-colors group">
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  {topic.title}
-                  <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                </CardTitle>
-                <CardDescription className="pt-2">{topic.description}</CardDescription>
-              </CardHeader>
-            </Card>
-          </Link>
-        ))}
-      </div>
+      <TopicBrowser topics={topics} />
     </div>
   );
 }

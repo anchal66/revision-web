@@ -1,10 +1,12 @@
-export const data = {
+import { TheoryTopicData } from './types';
+
+export const data: TheoryTopicData = {
     title: 'Java Language Architecture & Application Framework',
     description: 'A comprehensive documentation of the Java language, derived from an extensive curriculum covering algorithmic foundations, object-oriented design patterns, and modern functional programming capabilities. The analysis synthesizes instruction from foundational syntax to enterprise-grade concurrency frameworks, offering a deep dive into the mechanics of the Java Virtual Machine (JVM) and the engineering principles required for robust application development.',
-    patterns: [
+    sections: [
         {
             title: '1. Introduction to the Java Ecosystem and Execution Model',
-            description: `
+            content: `
 The Java programming language represents a paradigm shift in software engineering, moving developers from platform-dependent procedural code to a platform-independent, object-oriented architectural model. This report serves as a comprehensive documentation of the Java language, derived from an extensive curriculum covering algorithmic foundations, object-oriented design patterns, and modern functional programming capabilities. The analysis synthesizes instruction from foundational syntax to enterprise-grade concurrency frameworks, offering a deep dive into the mechanics of the Java Virtual Machine (JVM) and the engineering principles required for robust application development.
 
 ### 1.1 The Philosophy of Platform Independence
@@ -19,14 +21,15 @@ The development lifecycle in Java follows a rigorous path:
 *   **Execution:** The Execution Engine converts bytecode into native machine code.
 
 This structured approach eliminates many classes of errors common in lower-level languages, specifically manual memory management and direct pointer manipulation, replacing them with a managed execution environment that prioritizes safety and scalability.
-`,
-            exampleProblems: [
-                'Explaining "Write Once, Run Anywhere"',
-                'The role of the JVM in execution'
-            ],
-            solutions: [{
-                problemTitle: 'Bytecode Visualization',
-                code: `
+
+### Example Problems
+- Explaining "Write Once, Run Anywhere"
+- The role of the JVM in execution
+
+### Solutions
+
+#### Bytecode Visualization
+\`\`\`java
 // Source: HelloWorld.java
 public class HelloWorld {
     public static void main(String[] args) {
@@ -39,13 +42,13 @@ public class HelloWorld {
 // 3: ldc           #3 // String Hello
 // 5: invokevirtual #4 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
 // 8: return
-        `,
-                explanation: 'The bytecode instructions (getstatic, ldc, invokevirtual) are platform-independent. The JVM on Windows translates them to x86 Windows instructions, while the JVM on Linux translates them to x86 Linux instructions.'
-            }]
+\`\`\`
+The bytecode instructions (getstatic, ldc, invokevirtual) are platform-independent. The JVM on Windows translates them to x86 Windows instructions, while the JVM on Linux translates them to x86 Linux instructions.
+`
         },
         {
             title: '2. Lexical Structure, Data Systems, and Control Architecture',
-            description: `
+            content: `
 Before constructing complex objects, a Java developer must master the atomic units of the language: variables, data types, and control flow mechanisms. These elements form the syntax tree from which all application logic is derived.
 
 ### 2.1 The Primitive Data Type System
@@ -96,15 +99,16 @@ Recursion is an advanced control flow technique where a method invokes itself to
 *   **Mechanism:** Each recursive call pushes a new frame onto the Thread Stack.
 *   **Base Case:** A termination condition is mandatory. Without it, the recursion continues indefinitely until the Stack memory is exhausted, resulting in a \`StackOverflowError\`.
 *   **Applications:** The curriculum highlights the calculation of Factorials and the Fibonacci sequence as classic use cases where recursive logic simplifies the code compared to iterative solutions.
-`,
-            exampleProblems: [
-                'Choosing the right data type for efficiency',
-                'Preventing "Switch Fall-Through" bugs',
-                'Recursive Factorial Calculation'
-            ],
-            solutions: [{
-                problemTitle: 'Modern Switch Expression',
-                code: `
+
+### Example Problems
+- Choosing the right data type for efficiency
+- Preventing "Switch Fall-Through" bugs
+- Recursive Factorial Calculation
+
+### Solutions
+
+#### Modern Switch Expression
+\`\`\`java
 // Old Way (Error Prone)
 switch (day) {
     case MONDAY:
@@ -126,13 +130,13 @@ int numLetters = switch (day) {
     case WEDNESDAY              -> 9;
     default -> throw new IllegalStateException("Invalid day: " + day);
 };
-        `,
-                explanation: 'The arrow syntax `->` eliminates the need for `break` statements, preventing accidental fall-through logic. It also allows the switch to be used as an expression to return a value directly.'
-            }]
+\`\`\`
+The arrow syntax \`->\` eliminates the need for \`break\` statements, preventing accidental fall-through logic. It also allows the switch to be used as an expression to return a value directly.
+`
         },
         {
             title: '3. Data Structures I: Arrays and Algorithmic Logic',
-            description: `
+            content: `
 Arrays are the most fundamental data structure in Java, offering indexed access to a fixed sequence of elements. Mastery of array manipulation is the prerequisite for understanding complex algorithms and the Collections Framework.
 
 ### 3.1 One-Dimensional Array Architecture
@@ -178,15 +182,16 @@ Java supports arrays of arrays, allowing for the creation of matrices or grids.
     *   **Primary Diagonal:** Elements where row index equals column index (\`i == j\`).
     *   **Secondary Diagonal:** Elements where \`row + col == size - 1\`.
 *   **Complexity:** The logic must handle the center element of odd-sized matrices carefully to avoid double-counting it (once for the primary, once for the secondary diagonal).
-`,
-            exampleProblems: [
-                'Finding the maximum value in an array of negative numbers',
-                'Reversing an array in-place',
-                'Merging two sorted arrays'
-            ],
-            solutions: [{
-                problemTitle: 'Two-Pointer Array Reversal',
-                code: `
+
+### Example Problems
+- Finding the maximum value in an array of negative numbers
+- Reversing an array in-place
+- Merging two sorted arrays
+
+### Solutions
+
+#### Two-Pointer Array Reversal
+\`\`\`java
 public void reverse(int[] arr) {
     int i = 0;
     int j = arr.length - 1;
@@ -202,13 +207,13 @@ public void reverse(int[] arr) {
         j--;
     }
 }
-        `,
-                explanation: 'By swapping elements from the ends moving inward, we reverse the array without allocating a new one, achieving optimal space complexity.'
-            }]
+\`\`\`
+By swapping elements from the ends moving inward, we reverse the array without allocating a new one, achieving optimal space complexity.
+`
         },
         {
             title: '4. Object-Oriented Architecture: The Object Model',
-            description: `
+            content: `
 The transition from procedural code (loops and variables) to Object-Oriented Programming (OOP) is the defining characteristic of Java. This paradigm organizes software around Objects—entities that hold data (state) and methods (behavior)—rather than logic alone.
 
 ### 4.1 The Class vs. Object Dichotomy
@@ -232,27 +237,28 @@ Understanding memory segmentation is critical for debugging and performance tuni
 *   **Static Members:** Marked with the \`static\` keyword, these belong to the Class. There is only one copy of a static variable, shared by all instances.
 *   **Use Case:** Constants (e.g., \`Math.PI\`) or counters (e.g., tracking the total number of Car objects created).
 *   **Constraint:** Static methods cannot access instance variables directly because they run in a context where no specific "instance" is guaranteed to exist.
-`,
-            exampleProblems: [
-                'Stack vs Heap memory allocation',
-                'Using `this` to resolve shadowing'
-            ],
-            solutions: [{
-                problemTitle: 'Memory Allocation Visualization',
-                code: `
+
+### Example Problems
+- Stack vs Heap memory allocation
+- Using \`this\` to resolve shadowing
+
+### Solutions
+
+#### Memory Allocation Visualization
+\`\`\`java
 public void method() {
     int x = 10; // Stored on Stack
     Car c = new Car(); 
     // "c" (reference) is on Stack.
     // "new Car()" (object) is on Heap.
 }
-        `,
-                explanation: 'When `method()` finishes, the stack frame is popped. `x` and `c` are destroyed. The `Car` object on the Heap becomes unreachable and is eventually reclaimed by the Garbage Collector.'
-            }]
+\`\`\`
+When \`method()\` finishes, the stack frame is popped. \`x\` and \`c\` are destroyed. The \`Car\` object on the Heap becomes unreachable and is eventually reclaimed by the Garbage Collector.
+`
         },
         {
             title: '5. The Pillars of OOP: Encapsulation and Inheritance',
-            description: `
+            content: `
 Java's scalability relies on four architectural pillars: Encapsulation, Inheritance, Abstraction, and Polymorphism. These principles allow developers to build massive, modular systems.
 
 ### 5.1 Encapsulation: Data Integrity and Hiding
@@ -277,14 +283,15 @@ Inheritance allows a new class (Subclass) to acquire the properties and behavior
 Just as \`this\` refers to the current instance, \`super\` refers to the parent class.
 *   **Usage:** It is used to call the parent's constructor (\`super()\`) or to access parent methods that have been overridden in the child class (\`super.start()\`).
 *   **Constructor Chaining:** A subclass constructor must call the parent constructor (implicitly or explicitly) to ensure the parent's state is initialized before the child's logic runs.
-`,
-            exampleProblems: [
-                'Designing an immutable class',
-                'Proper use of `super` in constructors'
-            ],
-            solutions: [{
-                problemTitle: 'Encapsulation with Validation',
-                code: `
+
+### Example Problems
+- Designing an immutable class
+- Proper use of \`super\` in constructors
+
+### Solutions
+
+#### Encapsulation with Validation
+\`\`\`java
 public class Person {
     private int age; // Private state
 
@@ -295,13 +302,13 @@ public class Person {
         this.age = age;
     }
 }
-        `,
-                explanation: 'Direct access (`p.age = -5`) would corrupt the object state. The setter ensures that the object remains in a valid state at all times.'
-            }]
+\`\`\`
+Direct access (\`p.age = -5\`) would corrupt the object state. The setter ensures that the object remains in a valid state at all times.
+`
         },
         {
             title: '6. The Pillars of OOP: Abstraction and Polymorphism',
-            description: `
+            content: `
 While Encapsulation and Inheritance handle structure and reuse, Abstraction and Polymorphism handle flexibility and interface design.
 
 ### 6.1 Abstraction: Hiding Implementation
@@ -319,27 +326,28 @@ Polymorphism allows a single interface to control different underlying forms (da
 *   **Upcasting and Downcasting:**
     *   **Upcasting:** Treating a specific object as a generic parent (safe and automatic).
     *   **Downcasting:** Casting a generic parent reference back to a specific child (\`Car c = (Car) vehicle\`). This is risky and can throw a \`ClassCastException\` if the object is not actually a Car. The \`instanceof\` operator is used to verify the type before downcasting.
-`,
-            exampleProblems: [
-                'Interface vs Abstract Class',
-                'Runtime Polymorphism with Upcasting'
-            ],
-            solutions: [{
-                problemTitle: 'Dynamic Method Dispatch',
-                code: `
+
+### Example Problems
+- Interface vs Abstract Class
+- Runtime Polymorphism with Upcasting
+
+### Solutions
+
+#### Dynamic Method Dispatch
+\`\`\`java
 Vehicle v = new Car(); // Upcasting
 v.start(); 
 
 // Even though the reference 'v' is of type Vehicle,
 // the JVM executes Car's version of start() because
 // the actual object on the Heap is a Car.
-        `,
-                explanation: 'This allows for generic programming. A method can accept a `List<Vehicle>` and call `.start()` on each, without knowing if it is a Car, Truck, or Bike.'
-            }]
+\`\`\`
+This allows for generic programming. A method can accept a \`List<Vehicle>\` and call \`.start()\` on each, without knowing if it is a Car, Truck, or Bike.
+`
         },
         {
             title: '7. Data Structures II: String Manipulation and Math',
-            description: `
+            content: `
 Strings are ubiquitous in software, and Java handles them with unique memory optimizations.
 
 ### 7.1 String Immutability and the Constant Pool
@@ -352,14 +360,15 @@ In Java, String objects are immutable. Once created, their character sequence ca
 The \`java.lang.Math\` class provides static utility methods for complex arithmetic.
 *   **Random Number Generation:** \`Math.random()\` generates a double value $0.0 \\le x < 1.0$.
 *   **Scaling:** To generate a random integer between 1 and 100, the developer must scale the range and cast the result: \`(int)(Math.random() * 100) + 1\`.
-`,
-            exampleProblems: [
-                'Why String concatenation in loops is bad',
-                'Generating a random integer in a range'
-            ],
-            solutions: [{
-                problemTitle: 'StringBuilder vs Concatenation',
-                code: `
+
+### Example Problems
+- Why String concatenation in loops is bad
+- Generating a random integer in a range
+
+### Solutions
+
+#### StringBuilder vs Concatenation
+\`\`\`java
 // BAD: Creates N String objects (O(N^2) complexity)
 String s = "";
 for (int i=0; i<1000; i++) {
@@ -372,13 +381,13 @@ for (int i=0; i<1000; i++) {
     sb.append(i);
 }
 String s = sb.toString();
-        `,
-                explanation: 'String concatenation (`+`) creates a new String object every time. `StringBuilder` modifies the existing character array, avoiding massive garbage creation.'
-            }]
+\`\`\`
+String concatenation (\`+\`) creates a new String object every time. \`StringBuilder\` modifies the existing character array, avoiding massive garbage creation.
+`
         },
         {
             title: '8. Robustness Engineering: Exception Handling',
-            description: `
+            content: `
 Robust software must handle errors gracefully. Java forces developers to anticipate and manage failure states through its Exception Handling framework.
 
 ### 8.1 The Exception Hierarchy
@@ -392,14 +401,15 @@ Exceptions are events that disrupt the normal flow of instructions. In Java, the
 *   **Throw vs. Throws:**
     *   **throw:** An imperative command to generate an exception object (\`throw new IllegalArgumentException("Bad input")\`).
     *   **throws:** A declaration in the method signature indicating that the method might cause an exception, delegating the responsibility of handling it to the caller.
-`,
-            exampleProblems: [
-                'Checked vs Unchecked Exceptions',
-                'Ensuring file streams are closed'
-            ],
-            solutions: [{
-                problemTitle: 'Try-With-Resources',
-                code: `
+
+### Example Problems
+- Checked vs Unchecked Exceptions
+- Ensuring file streams are closed
+
+### Solutions
+
+#### Try-With-Resources
+\`\`\`java
 // Old Way (Verbose & Error Prone)
 FileWriter fw = null;
 try {
@@ -413,13 +423,13 @@ try {
 try (FileWriter fw = new FileWriter("file.txt")) {
     fw.write("Hello");
 } // fw.close() called automatically here
-        `,
-                explanation: 'Resources implementing `AutoCloseable` can be declared in the `try` statement. Java ensures they are closed when the block exits, preventing resource leaks.'
-            }]
+\`\`\`
+Resources implementing \`AutoCloseable\` can be declared in the \`try\` statement. Java ensures they are closed when the block exits, preventing resource leaks.
+`
         },
         {
             title: '9. Data Structures III: The Collections Framework',
-            description: `
+            content: `
 While arrays are fixed-size and rigid, the Collections Framework provides dynamic, flexible data structures.
 
 ### 9.1 The Core Interfaces
@@ -483,14 +493,15 @@ Before Java 5, Collections held raw Object references, requiring unsafe casting 
 *   **Generics:** The syntax \`List<String>\` restricts the list to only hold Strings.
 *   **The Diamond Operator:** \`new ArrayList<>()\` (introduced in Java 7) allows the compiler to infer the type arguments from the variable declaration, reducing verbosity.
 *   **Wrapper Classes & Autoboxing:** Collections cannot hold primitives (\`int\`). Java provides Wrapper Classes (\`Integer\`, \`Double\`). Autoboxing is the automatic conversion the compiler performs between the primitive and the wrapper (e.g., adding \`5\` to \`List<Integer>\` automatically converts it to \`new Integer(5)\`).
-`,
-            exampleProblems: [
-                'ArrayList vs LinkedList',
-                'Why HashMap keys must be immutable'
-            ],
-            solutions: [{
-                problemTitle: 'Using Generics for Type Safety',
-                code: `
+
+### Example Problems
+- ArrayList vs LinkedList
+- Why HashMap keys must be immutable
+
+### Solutions
+
+#### Using Generics for Type Safety
+\`\`\`java
 // Pre-Java 5 (Unsafe)
 List list = new ArrayList();
 list.add("Hello");
@@ -501,13 +512,13 @@ String s = (String) list.get(1); // Throws ClassCastException at runtime
 List<String> list = new ArrayList<>();
 list.add("Hello");
 // list.add(123); // Compile-time Error!
-        `,
-                explanation: 'Generics move type checking from runtime to compile-time, preventing `ClassCastException` and making code more readable.'
-            }]
+\`\`\`
+Generics move type checking from runtime to compile-time, preventing \`ClassCastException\` and making code more readable.
+`
         },
         {
             title: '10. Concurrency and Multithreading',
-            description: `
+            content: `
 Modern computing relies on parallelism. Java provides built-in support for Multithreading, allowing applications to perform multiple tasks simultaneously.
 
 ### 10.1 Thread Lifecycle and Creation
@@ -529,14 +540,15 @@ Manually creating threads is resource-intensive. The Executor Service (introduce
     *   \`Runnable\` cannot return a value.
     *   \`Callable\` is a generic interface that returns a result.
     *   **Future:** When a \`Callable\` is submitted to an executor, it returns a \`Future\`. This object represents the pending result of the computation. \`future.get()\` blocks the current thread until the result is ready, bridging the gap between asynchronous execution and synchronous result retrieval.
-`,
-            exampleProblems: [
-                'Race Conditions and Deadlocks',
-                'Runnable vs Callable'
-            ],
-            solutions: [{
-                problemTitle: 'Executor Service & Futures',
-                code: `
+
+### Example Problems
+- Race Conditions and Deadlocks
+- Runnable vs Callable
+
+### Solutions
+
+#### Executor Service & Futures
+\`\`\`java
 ExecutorService executor = Executors.newFixedThreadPool(2);
 
 Callable<Integer> task = () -> {
@@ -551,13 +563,13 @@ Future<Integer> future = executor.submit(task);
 // Blocks until result is ready
 Integer result = future.get(); 
 executor.shutdown();
-        `,
-                explanation: 'Using `Callable` and `Future` allows us to execute tasks asynchronously and retrieve their results later, handling exceptions and timeouts gracefully.'
-            }]
+\`\`\`
+Using \`Callable\` and \`Future\` allows us to execute tasks asynchronously and retrieve their results later, handling exceptions and timeouts gracefully.
+`
         },
         {
             title: '11. Functional Programming and Modern Java',
-            description: `
+            content: `
 Java 8 introduced the most significant changes in the language's history, incorporating Functional Programming (FP) concepts to make code more concise and parallel-friendly.
 
 ### 11.1 Lambda Expressions
@@ -577,14 +589,15 @@ Streams provide a declarative approach to processing collections of data.
 \`NullPointerException\` is the most common runtime error in Java.
 *   **The Container:** \`Optional<T>\` is a container object that may or may not contain a non-null value.
 *   **API:** Instead of checking \`if (x != null)\`, developers use methods like \`ifPresent()\`, \`orElse()\`, or \`map()\`. This forces the developer to explicitly handle the "absent value" case, leading to safer APIs.
-`,
-            exampleProblems: [
-                'Converting loops to Streams',
-                'Avoiding NullChecks with Optional'
-            ],
-            solutions: [{
-                problemTitle: 'Stream API Pipeline',
-                code: `
+
+### Example Problems
+- Converting loops to Streams
+- Avoiding NullChecks with Optional
+
+### Solutions
+
+#### Stream API Pipeline
+\`\`\`java
 List<String> names = Arrays.asList("Alice", "Bob", "Charlie", "David");
 
 // Filter names starting with 'A', convert to UpperCase, sort
@@ -593,37 +606,38 @@ List<String> result = names.stream()
     .map(String::toUpperCase)
     .sorted()
     .collect(Collectors.toList());
-        `,
-                explanation: 'Streams allow for readable, declarative code. The operations are lazy; if we only asked for `.findFirst()`, the stream would stop processing after "Alice" without touching the rest of the list.'
-            }]
+\`\`\`
+Streams allow for readable, declarative code. The operations are lazy; if we only asked for \`.findFirst()\`, the stream would stop processing after "Alice" without touching the rest of the list.
+`
         },
         {
             title: '12. File I/O and Persistence',
-            description: `
+            content: `
 Applications often require persistent storage. Java's I/O (Input/Output) package provides streams for reading and writing data.
 
 ### 12.1 Character Streams
 *   \`FileWriter\` and \`FileReader\`: specialized for handling text data.
 *   **Try-With-Resources:** File resources must be closed to prevent memory leaks. Modern Java (Java 7+) introduces \`try(FileWriter fw = new FileWriter("file.txt")) {... }\`. This syntax ensures that the file is automatically closed when the block exits, even if an exception occurs, eliminating the need for verbose \`finally\` blocks.
-`,
-            exampleProblems: [
-                'Reading and Writing text files safely'
-            ],
-            solutions: [{
-                problemTitle: 'Safe File Writing',
-                code: `
+
+### Example Problems
+- Reading and Writing text files safely
+
+### Solutions
+
+#### Safe File Writing
+\`\`\`java
 try (FileWriter fw = new FileWriter("output.txt")) {
     fw.write("Persistent Data");
 } catch (IOException e) {
     e.printStackTrace();
 }
-        `,
-                explanation: 'The try-with-resources statement ensures that the FileWriter is closed even if an exception occurs during the write operation.'
-            }]
+\`\`\`
+The try-with-resources statement ensures that the FileWriter is closed even if an exception occurs during the write operation.
+`
         },
         {
             title: '13. Modern Java Features (Java 9 - 21)',
-            description: `
+            content: `
 Java has evolved rapidly since Java 8, adopting a 6-month release cycle. Key features for senior engineers include:
 
 ### Java 9: The Module System (JPMS)
@@ -654,14 +668,15 @@ Java has evolved rapidly since Java 8, adopting a 6-month release cycle. Key fea
 *   **Solution:** Virtual Threads are lightweight (managed by JVM, not OS). Mapped M:N to OS threads.
 *   **Syntax:** \`Thread.startVirtualThread(() -> ...)\` or \`Executors.newVirtualThreadPerTaskExecutor()\`.
 *   **Impact:** Enables "Thread-per-Request" model to scale to millions of concurrent tasks without reactive complexity.
-`,
-            exampleProblems: [
-                'Refactoring DTOs to Records',
-                'Using Virtual Threads for high-throughput I/O'
-            ],
-            solutions: [{
-                problemTitle: 'Records vs Classes',
-                code: `
+
+### Example Problems
+- Refactoring DTOs to Records
+- Using Virtual Threads for high-throughput I/O
+
+### Solutions
+
+#### Records vs Classes
+\`\`\`java
 // Pre-Java 16
 public class Point {
     private final int x;
@@ -673,13 +688,13 @@ public class Point {
 // Java 16+ Record
 public record Point(int x, int y) {} 
 // That's it! Immutable, transparent, and concise.
-                `,
-                explanation: 'Records reduce boilerplate for data-carrying classes, ensuring immutability and correct implementations of object methods by default.'
-            }]
+\`\`\`
+Records reduce boilerplate for data-carrying classes, ensuring immutability and correct implementations of object methods by default.
+`
         },
         {
             title: '14. Deep Dive: Garbage Collection & JVM Internals',
-            description: `
+            content: `
 Garbage Collection (GC) is the automatic management of Heap memory. Understanding it is crucial for performance tuning.
 
 ### 14.1 The Generational Hypothesis
@@ -717,14 +732,15 @@ GC starts from **GC Roots** (Stack variables, Static variables, JNI references).
 *   \`-Xmx\`: Max Heap Size.
 *   \`-XX:+UseG1GC\`: Enable G1 GC.
 *   \`-XX:MaxGCPauseMillis=200\`: Target pause time hint.
-`,
-            exampleProblems: [
-                'Identifying Memory Leaks',
-                'Tuning for Low Latency vs Throughput'
-            ],
-            solutions: [{
-                problemTitle: 'Visualizing GC Roots',
-                code: `
+
+### Example Problems
+- Identifying Memory Leaks
+- Tuning for Low Latency vs Throughput
+
+### Solutions
+
+#### Visualizing GC Roots
+\`\`\`java
 public class MemoryLeak {
     // Static list is a GC Root!
     private static final List<Object> cache = new ArrayList<>();
@@ -735,19 +751,17 @@ public class MemoryLeak {
         cache.add(new byte[1024 * 1024]); 
     }
 }
-                `,
-                explanation: 'Static variables are GC Roots. If they hold references to objects that are no longer needed, those objects cannot be collected, leading to a Memory Leak (OutOfMemoryError).'
-            }]
+\`\`\`
+Static variables are GC Roots. If they hold references to objects that are no longer needed, those objects cannot be collected, leading to a Memory Leak (OutOfMemoryError).
+`
         },
         {
             title: '15. Conclusion',
-            description: `
+            content: `
 This documentation has detailed the complete trajectory of the Java curriculum, from the bit-level management of primitive data types to the high-level orchestration of concurrent threads and functional streams. The language's architecture is defined by a tension between strict compile-time safety (Generics, Checked Exceptions) and runtime flexibility (Polymorphism, Reflection).
 
 By mastering the foundational logic of arrays and loops, adhering to the design strictures of Object-Oriented Programming, and utilizing the modern power of the Collections and Executor frameworks, a developer transitions from writing scripts to engineering scalable, resilient enterprise applications. The journey through Java is one of understanding not just syntax, but the underlying memory models and architectural decisions that make the language a cornerstone of modern software infrastructure.
-`,
-            exampleProblems: [],
-            solutions: []
+`
         }
     ],
     faqs: [
