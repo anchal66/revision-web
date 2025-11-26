@@ -1,8 +1,8 @@
 // @/components/CodeBlock.tsx (Final Dynamic Theme Update)
-'use client'; 
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react'; // Added useRef
-import { codeToHtml } from 'shiki'; 
+import { codeToHtml } from 'shiki';
 import { transformerNotationHighlight } from '@shikijs/transformers';
 import { CopyButton } from './CopyButton';
 
@@ -37,29 +37,29 @@ export function CodeBlock({ code, lang, filename }: CodeBlockProps) {
 
   useEffect(() => {
     let isMounted = true;
-    
+
     async function highlightCode() {
       // 1. Determine the active theme dynamically
-      const activeTheme = getCurrentTheme(); 
+      const activeTheme = getCurrentTheme();
       setHtmlContent(null); // Reset content while loading new theme
 
       try {
         const html = await codeToHtml(code, {
           lang: lang,
           // 2. Pass ONLY the active theme name as a string
-          theme: activeTheme, 
+          theme: activeTheme,
           transformers: [
             transformerNotationHighlight(),
           ],
         });
-        
+
         if (isMounted) {
           setHtmlContent(html);
         }
       } catch (error) {
         console.error("Error highlighting code:", error);
         if (isMounted) {
-            setHtmlContent(`<pre><code>${code}</code></pre>`);
+          setHtmlContent(`<pre><code>${code}</code></pre>`);
         }
       }
     }
@@ -81,7 +81,7 @@ export function CodeBlock({ code, lang, filename }: CodeBlockProps) {
 
   // 4. Render the component with the ref
   return (
-    <div 
+    <div
       ref={containerRef} // Attach the ref here
       className="code-block-container my-6 rounded-lg border bg-secondary/50 relative"
     >
@@ -90,17 +90,20 @@ export function CodeBlock({ code, lang, filename }: CodeBlockProps) {
           <p className="text-sm text-muted-foreground">{filename}</p>
         </div>
       )}
-      <div className="absolute top-2 right-2">
-        <CopyButton textToCopy={code} />
+      <div className="relative group">
+        <div className="absolute right-4 top-4 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+          <CopyButton textToCopy={code} />
+        </div>
+        <div className="max-h-[600px] overflow-y-auto overflow-x-auto rounded-lg border bg-muted/50">
+          {htmlContent === null ? (
+            <div className="p-4 text-sm text-muted-foreground">Loading code syntax...</div>
+          ) : (
+            <pre className="p-4 text-sm font-mono leading-relaxed min-w-full w-max">
+              <code dangerouslySetInnerHTML={{ __html: htmlContent }} />
+            </pre>
+          )}
+        </div>
       </div>
-      {htmlContent === null ? (
-         <div className="p-4 text-sm text-muted-foreground">Loading code syntax...</div>
-      ) : (
-        <div
-          className="text-sm overflow-x-auto p-4"
-          dangerouslySetInnerHTML={{ __html: htmlContent }} 
-        />
-      )}
     </div>
   );
 }
