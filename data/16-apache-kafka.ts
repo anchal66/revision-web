@@ -2,192 +2,191 @@ import { TheoryTopicData } from './types';
 
 export const data: TheoryTopicData = {
     title: 'Apache Kafka: Event Streaming & System Design',
-    description: 'A deep dive into distributed event streaming. Covers Kafka architecture (Brokers, Zookeeper/KRaft), Delivery Semantics (At-least-once vs Exactly-once), Consumer Groups, Partitioning strategies, and production-grade configuration.',
+    description: 'A comprehensive documentation of Apache Kafka, covering distributed event streaming concepts, architecture, and a hands-on guide to Spring Boot integration with Confluent Cloud.',
     sections: [
         {
-            title: '1. Kafka Architecture & Core Concepts',
+            title: '1. Introduction & Core Concepts',
             content: `
-**What is Kafka?**
-A distributed event streaming platform capable of handling trillions of events a day. It acts as a central nervous system for data.
+Apache Kafka is an open-source distributed event streaming platform designed to handle high-volume, real-time data feeds.
 
-**Core Components:**
-*   **Broker:** A single Kafka server. Receives and stores messages.
-*   **Cluster:** A group of brokers working together.
-*   **Topic:** A category or feed name to which records are stored. Analogous to a database table.
-*   **Partition:** Topics are split into partitions for scalability. A partition is an ordered, immutable sequence of records.
-*   **Offset:** A unique identifier for a record within a partition.
-*   **Producer:** Publishes data to topics.
-*   **Consumer:** Subscribes to topics and processes data.
+**Core Characteristics:**
+*   **Distributed:** Runs on multiple servers (Brokers) to provide scalability and fault tolerance.
+*   **Event Streaming:** Captures data in real-time from event sources (like databases, sensors, mobile devices) and processes it instantaneously.
 
-**Zookeeper vs KRaft:**
-*   **Zookeeper:** Historically used for cluster metadata management (controller election, topic config).
-*   **KRaft (Kafka Raft Metadata mode):** Removes Zookeeper dependency. Metadata is stored in a Kafka topic. Simpler operations.
+### Why use Kafka? (The Problem it Solves)
+In a traditional synchronous system (e.g., REST APIs), services are tightly coupled.
 
-### Example Problems
-- Designing a scalable log aggregation system
-- Understanding how partitions enable parallelism
+**Scenario:** A user "Likes" a post. The "Like Service" calls the "Notification Service" directly.
 
-### Solutions
+**Issues:**
+1.  If the Notification Service goes down, the data is lost or the Like Service fails.
+2.  If traffic spikes (e.g., 1 million likes/sec), the Notification Service might crash under load.
 
-#### Topic Partitioning Visualization
-\`\`\`text
-Topic: "User-Clicks"
------------------------
-Partition 0: [0] [1] [2] [3] ... (Stored on Broker 1)
-Partition 1: [0] [1] [2] ...     (Stored on Broker 2)
-Partition 2: [0] [1] [2] [3] ... (Stored on Broker 3)
-\`\`\`
-Producers write to specific partitions (Round-robin or Key-based). Consumers read from partitions. Parallelism is limited by the number of partitions (e.g., if you have 3 partitions, you can have at most 3 active consumers in a group).
+**Kafka Solution:** Acts as a buffer/broker. The "Like Service" (Producer) pushes events to Kafka. The "Notification Service" (Consumer) reads them at its own pace. This achieves **Decoupling**, **Asynchronicity**, and **High Throughput**.
 `
         },
         {
-            title: '2. Delivery Semantics & Reliability',
+            title: '2. Kafka Architecture',
             content: `
-Guaranteeing message delivery is critical for financial or audit systems.
+### 2.1 Basic Terminologies
+*   **Broker:** A single Kafka server. A Cluster is a group of brokers working together.
+*   **Topic:** A category or feed name to which records are stored (similar to a Table in a database).
+*   **Zookeeper:** Manages the cluster health and metadata (keeping track of brokers, leaders, etc.). *Note: Modern Kafka uses KRaft mode to remove this dependency.*
+*   **Producer:** Application that publishes (writes) data to topics.
+*   **Consumer:** Application that subscribes to (reads) data from topics.
 
-**Semantics:**
-1.  **At-most-once:** Message might be lost, but never redelivered. (Fire and forget).
-2.  **At-least-once:** Message is never lost, but might be redelivered. (Standard).
-3.  **Exactly-once:** Message is delivered once and only once. (Transactional).
+### 2.2 Partitions & Offsets
+*   **Partition:** A topic is split into multiple parts called Partitions to allow data to be distributed across multiple brokers for parallel processing.
+*   **Offset:** A unique, immutable integer sequence number assigned to each message within a partition. It acts as an ID for the message.
 
-**Producer Acks:**
-*   \`acks=0\`: Producer sends and doesn't wait. High throughput, high risk of loss.
-*   \`acks=1\`: Leader broker acknowledges. Moderate safety.
-*   \`acks=all\` (or \`-1\`): Leader and all In-Sync Replicas (ISR) acknowledge. Highest safety.
-
-### Example Problems
-- Configuring for Zero Data Loss
-- Handling duplicate messages in consumers
-
-### Solutions
-
-#### Zero Data Loss Configuration
-\`\`\`properties
-# Producer Config
-acks=all
-retries=2147483647
-enable.idempotence=true
-max.in.flight.requests.per.connection=5 # (with idempotence)
-
-# Broker Config
-min.insync.replicas=2
-replication.factor=3
-unclean.leader.election.enable=false
-\`\`\`
-This configuration ensures that a message is considered "committed" only when it is written to multiple replicas, preventing data loss even if a broker crashes.
+**Key Rule on Ordering:**
+*   **Within a Partition:** Ordering is guaranteed.
+*   **Across a Topic:** Ordering is NOT guaranteed.
 `
         },
         {
-            title: '3. Consumer Groups & Rebalancing',
+            title: '3. Data Distribution & Ordering',
             content: `
-**Consumer Group:**
-A set of consumers working together to consume a topic.
-*   **Load Balancing:** Partitions are assigned to members of the group.
-*   **Scalability:** To scale processing, add more consumers to the group (up to the number of partitions).
+### 3.1 Producing Messages (Key vs. No Key)
+How does Kafka decide which partition a message goes to?
 
-**Rebalancing:**
-The process of reassigning partitions when a consumer joins or leaves the group.
-*   **Stop-the-world:** Historically, all consumption stopped during rebalance.
-*   **Cooperative Rebalancing:** (Incremental) Only moves partitions that need to be moved, reducing downtime.
+*   **Without Key:** Data is sent in a Round-Robin fashion (Partition 0 -> Partition 1 -> Partition 2).
+    *   *Result:* Load is balanced, but no ordering guarantee.
+*   **With Key (e.g., user_id):** Kafka hashes the key. All messages with the same key always go to the same partition.
+    *   *Result:* Ordering is guaranteed for that specific key.
 
-### Example Problems
-- Why is my consumer idle?
-- Handling "Consumer Lag"
+### 3.2 Consumer Groups
+A Consumer Group consists of multiple consumers working together to consume a topic.
+*   **Partition Assignment:** Kafka ensures that one partition is consumed by only one consumer within a group at any given time.
+*   **Scalability:** To scale up processing, you add more consumers to the group (up to the number of partitions).
 
-### Solutions
-
-#### Consumer Group Logic
-\`\`\`text
-Scenario: Topic T1 has 4 Partitions (P0, P1, P2, P3).
-
-1. Start Consumer A (Group G1):
-   - A reads P0, P1, P2, P3
-
-2. Start Consumer B (Group G1):
-   - Rebalance triggers.
-   - A reads P0, P1
-   - B reads P2, P3
-
-3. Start Consumer C (Group G1):
-   - A reads P0, P1
-   - B reads P2
-   - C reads P3
-
-4. Start Consumer D, E (Group G1):
-   - A->P0, B->P1, C->P2, D->P3
-   - E is IDLE! (No partitions left)
-\`\`\`
-To utilize Consumer E, you must increase the number of partitions in the topic.
+### 3.3 Internal Storage (Segments & Logs)
+*   **Commit Log:** Data is stored sequentially in log files on the disk (\`/tmp/kafka-logs\`).
+*   **Segments:** Logs are split into segments. When a segment reaches a size limit (default 1GB) or time limit (default 7 days), a new one is created.
+*   **Retention Policy:** Old data is deleted automatically based on time (e.g., 7 days) or size to manage disk space.
 `
         },
         {
-            title: '4. Kafka Streams & Connect',
+            title: '4. Hands-on: Spring Boot Integration (Confluent Cloud)',
             content: `
-**Kafka Connect:**
-Framework for connecting Kafka with external systems (Source & Sink).
-*   **Source Connector:** Pulls data from DB (JDBC), S3, etc. into Kafka.
-*   **Sink Connector:** Pushes data from Kafka to Elasticsearch, HDFS, etc.
+While you can run Kafka locally using CLI, the modern approach for production is using a managed service like Confluent Cloud.
 
-**Kafka Streams:**
-Client library for building real-time stream processing apps.
-*   **Stateless:** Filter, Map.
-*   **Stateful:** Count, Aggregate, Join (Windowing).
-*   **KTable vs KStream:**
-    *   **KStream:** Insert-only log (All events).
-    *   **KTable:** Changelog stream (Latest value per key).
+### 4.1 Prerequisites & Setup
+1.  Create an account on Confluent Cloud.
+2.  Create a Cluster (Basic/Standard) and a Topic (e.g., \`weekly-sentiments\`).
+3.  Generate API Keys (Key & Secret) for authentication.
 
-### Example Problems
-- Real-time fraud detection
-- Database Change Data Capture (CDC)
+### 4.2 Dependencies (pom.xml)
+Add the Spring for Apache Kafka support and Jackson for JSON processing.
 
-### Solutions
+\`\`\`xml
+<dependency>
+    <groupId>org.springframework.kafka</groupId>
+    <artifactId>spring-kafka</artifactId>
+</dependency>
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+</dependency>
+\`\`\`
 
-#### Word Count with Kafka Streams
+### 4.3 Configuration (application.yml)
+Configure connection details for Confluent Cloud.
+
+\`\`\`yaml
+spring:
+  kafka:
+    bootstrap-servers: <YOUR_CONFLUENT_BOOTSTRAP_SERVER_URL>
+    properties:
+      sasl.mechanism: PLAIN
+      security.protocol: SASL_SSL
+      sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username='<API_KEY>' password='<API_SECRET>';
+      session.timeout.ms: 45000 # Heartbeat check
+      
+    producer:
+      # Serialize keys as Strings and Values as JSON
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+    consumer:
+      group-id: weekly-sentiment-group
+      auto-offset-reset: earliest # Read from beginning if no offset exists
+      # Deserialize keys as Strings and Values as JSON
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*" # Allow deserialization of all packages
+\`\`\`
+`
+        },
+        {
+            title: '5. Implementation Code',
+            content: `
+### 5.1 Data Model
+Create a POJO to represent the event data.
+
 \`\`\`java
-KStream<String, String> textLines = builder.stream("TextLinesTopic");
-
-KTable<String, Long> wordCounts = textLines
-    .flatMapValues(textLine -> Arrays.asList(textLine.toLowerCase().split("\\\\W+")))
-    .groupBy((key, word) -> word)
-    .count(Materialized.as("Counts"));
-
-wordCounts.toStream().to("WordsWithCountsTopic", Produced.with(Serdes.String(), Serdes.Long()));
+public class SentimentData {
+    private String email;
+    private String sentiment;
+    
+    // Constructors, Getters, Setters
+    public SentimentData() {}
+    
+    public SentimentData(String email, String sentiment) {
+        this.email = email;
+        this.sentiment = sentiment;
+    }
+    
+    // ... getters and setters
+}
 \`\`\`
-This concise code implements a real-time word count application that scales automatically with the Kafka cluster.
+
+### 5.2 Producer (Sending Messages)
+Use \`KafkaTemplate\` to send messages.
+
+\`\`\`java
+@Service
+public class SentimentProducerService {
+
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
+
+    public void sendSentiment(String email, String sentiment) {
+        SentimentData data = new SentimentData(email, sentiment);
+        
+        // Sending message: Topic, Key, Value
+        // Using 'email' as Key ensures all events for one user go to the same partition
+        kafkaTemplate.send("weekly-sentiments", email, data);
+    }
+}
+\`\`\`
+
+### 5.3 Consumer (Receiving Messages)
+Use \`@KafkaListener\` to listen to the topic.
+
+\`\`\`java
+@Service
+public class SentimentConsumerService {
+
+    @KafkaListener(topics = "weekly-sentiments", groupId = "weekly-sentiment-group")
+    public void consume(SentimentData sentimentData) {
+        // Logic to process the event (e.g., send email)
+        System.out.println("Received Sentiment: " + sentimentData.getSentiment());
+        System.out.println("Processing email for: " + sentimentData.getEmail());
+    }
+}
+\`\`\`
 `
         },
         {
-            title: '5. Advanced Configuration & Tuning',
+            title: '6. Summary of Key Workflows',
             content: `
-**Performance Tuning:**
-*   **Batch Size:** Increasing \`batch.size\` and \`linger.ms\` improves throughput (more compression) but increases latency.
-*   **Compression:** Use \`snappy\` or \`lz4\` for high throughput. \`zstd\` for high compression ratio.
+*   **Producer:** The Spring Boot application creates a \`SentimentData\` object and uses \`KafkaTemplate\` to send it. The key is the user's email.
+*   **Broker (Confluent):** Receives the message. Since a key is provided, it hashes the email and assigns it to a specific partition in the \`weekly-sentiments\` topic.
+*   **Consumer:** The \`@KafkaListener\` service constantly polls the broker. When the message arrives, it deserializes the JSON back into a Java object and executes the business logic (e.g., sending an email).
 
-**Log Compaction:**
-Instead of deleting old logs by time, Kafka keeps the *latest* value for each key.
-*   **Use Case:** Restoring state (e.g., current bank balance) without replaying full history.
-
-### Example Problems
-- Optimizing for High Throughput vs Low Latency
-- Using Log Compaction for configuration topics
-
-### Solutions
-
-#### High Throughput Producer Config
-\`\`\`properties
-# Wait up to 20ms to group messages into a batch
-linger.ms=20
-
-# Max batch size (64KB)
-batch.size=65536
-
-# Compression
-compression.type=snappy
-
-# Buffer Memory (32MB)
-buffer.memory=33554432
-\`\`\`
-By allowing a small delay (\`linger.ms\`), the producer can group more messages into a single network request, significantly increasing overall throughput.
+**Note on Reliability:** Kafka creates a special internal topic called \`__consumer_offsets\`. This tracks which messages a consumer group has successfully processed. If a consumer crashes and restarts, it checks this topic to resume reading from where it left off, ensuring no data is lost.
 `
         }
     ],
