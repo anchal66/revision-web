@@ -448,6 +448,66 @@ public class AuditorAwareImpl implements AuditorAware<String> {
         {
             question: 'Explain the difference between `getOne()` (now `getReferenceById`) and `findById()`.',
             answer: '`findById()` hits the database immediately and returns the actual Entity. `getReferenceById()` returns a **Proxy** (a placeholder) without hitting the DB. The DB is only hit when you access a property of that proxy. Useful for setting Foreign Keys without fetching the entire parent object.'
+        },
+        {
+            question: '6. What is the difference between `@JoinColumn` and `@MappedBy`?',
+            answer: '`@JoinColumn` is used on the **Owning Side** (usually the child) to specify the actual Foreign Key column in the table. `@MappedBy` is used on the **Inverse Side** (parent) to tell Hibernate: "I don\'t own this relationship; look at the field X in the other class to see how it\'s mapped." If you miss `@MappedBy`, Hibernate will create a redundant Join Table.'
+        },
+        {
+            question: '7. How does the `@Transactional` annotation work internally?',
+            answer: 'It uses **Spring AOP (Aspect Oriented Programming)**. Spring creates a proxy around your class. When you call a method, the proxy intercepts the call, opens a database transaction (via `TransactionManager`), executes your code, and then commits (or rolls back if a RuntimeException occurs).'
+        },
+        {
+            question: '8. What is the difference between `First Level Cache` and `Second Level Cache`?',
+            answer: '**L1 Cache:** Associated with the `Session` (Transaction). Enabled by default. Ensures that if you request the same entity ID twice in one transaction, the DB is hit only once. **L2 Cache:** Associated with the `SessionFactory` (Application). Disabled by default. Shared across all users/transactions. Requires a provider like Ehcache or Redis.'
+        },
+        {
+            question: '9. Explain `CascadeType.ALL` vs `CascadeType.PERSIST`.',
+            answer: '**PERSIST:** Only propagates the save operation. If you save the parent, the child is saved. **ALL:** Propagates everything: Persist, Merge (Update), Remove (Delete), Refresh, and Detach. Use `ALL` carefully, especially with `REMOVE`, to avoid accidental mass deletions.'
+        },
+        {
+            question: '10. What is "Orphan Removal"?',
+            answer: '`orphanRemoval = true` ensures that if you remove a child entity from the parent\'s list (e.g., `parent.getChildren().remove(child)`), Hibernate automatically deletes that child from the database. Without this, the child would just become "orphaned" (FK set to null) but remain in the DB.'
+        },
+        {
+            question: '11. How do you handle "OptimisticLockException"?',
+            answer: 'This exception occurs when two users try to update the same record simultaneously, and the version numbers mismatch. **Handling:** 1) Catch the exception and retry the operation (automatic retry logic). 2) Show an error to the user asking them to refresh the data and try again.'
+        },
+        {
+            question: '12. What are "Entity Graphs" and when to use them?',
+            answer: 'Entity Graphs allow you to define a graph of associated entities that should be retrieved in a single query. It is a dynamic way to solve N+1 problems, allowing you to override the default `Lazy` fetch type for specific queries without changing the global Entity configuration.'
+        },
+        {
+            question: '13. Difference between `CrudRepository`, `PagingAndSortingRepository`, and `JpaRepository`?',
+            answer: '**CrudRepository:** Basic CRUD (save, findById, delete). **PagingAndSortingRepository:** Adds `findAll(Pageable)` and `findAll(Sort)`. **JpaRepository:** Extends both, adding JPA-specific features like `flush()`, `saveAndFlush()`, and batch deletion. Always use `JpaRepository` unless you want to restrict functionality.'
+        },
+        {
+            question: '14. What is the purpose of `@Modifying` annotation?',
+            answer: 'It tells Spring Data JPA that the query is an UPDATE or DELETE operation, not a SELECT. It is required for any JPQL/Native query that modifies data. Often used with `@Transactional`.'
+        },
+        {
+            question: '15. How to execute a Stored Procedure using Spring Data JPA?',
+            answer: 'You can use the `@Procedure` annotation on a repository method. Example: `@Procedure(procedureName = "calculate_tax") int calculateTax(int income);`. Alternatively, use `@NamedStoredProcedureQuery` on the Entity.'
+        },
+        {
+            question: '16. What is the "Open Session In View" (OSIV) pattern? Is it good or bad?',
+            answer: 'OSIV keeps the Hibernate Session open during the View rendering phase (Controller/JSP/JSON serialization). **Pros:** Prevents `LazyInitializationException` easily. **Cons:** Keeps DB connection held longer than necessary, reducing throughput. Can cause N+1 queries during serialization. Best practice is to disable it (`spring.jpa.open-in-view=false`) and use DTOs.'
+        },
+        {
+            question: '17. How does Hibernate "Dirty Checking" work?',
+            answer: 'When an entity is loaded into the Persistence Context, Hibernate keeps a snapshot of its initial state. At flush time, it compares the current state of the object with the snapshot. If any field has changed, it automatically generates an UPDATE SQL statement. No explicit `save()` call is needed.'
+        },
+        {
+            question: '18. What is the difference between `GenerationType.IDENTITY` and `SEQUENCE`?',
+            answer: '**IDENTITY:** Relies on auto-increment columns (MySQL, SQL Server). Disables JDBC Batching because Hibernate needs the ID immediately after insert. **SEQUENCE:** Uses a database sequence (PostgreSQL, Oracle). Allows Hibernate to pre-fetch IDs, enabling efficient JDBC Batch inserts.'
+        },
+        {
+            question: '19. How to handle multiple Data Sources (Databases) in one Spring Boot app?',
+            answer: 'You need to configure multiple `DataSource`, `EntityManagerFactory`, and `TransactionManager` beans. You separate them by packages (e.g., `com.app.db1` uses TM1, `com.app.db2` uses TM2) using `@EnableJpaRepositories(basePackages = "...", transactionManagerRef = "...")`.'
+        },
+        {
+            question: '20. What is a "Composite Key" and how to map it?',
+            answer: 'A Primary Key made of multiple columns. **Mapping:** 1) Create a class (e.g., `OrderId`) implementing `Serializable` with the key fields. 2) Annotate it with `@Embeddable`. 3) Use `@EmbeddedId` in the main Entity. Alternatively, use `@IdClass`.'
         }
     ]
 };

@@ -26,21 +26,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 // *** REMOVED renderSimpleMarkdown FUNCTION DEFINITION FROM HERE ***
 
-/**
- * Helper function to render simple markdown-like text as HTML.
- * NOTE: This local version is ONLY for rendering the static 'description'
- * in this Server Component. The main Accordion rendering uses the function
- * defined inside PatternAccordion.tsx.
- */
-function renderSimpleMarkdown(text: string): string {
-  if (!text) return "";
-  return text
-    .replace(/contentReference\[.*?\]\{.*?\}/g, '') // Remove citations
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
-    .replace(/`(.*?)`/g, '<code>$1</code>')       // Inline code
-    .replace(/\n/g, '<br />');                   // Newlines
-}
-
+import { renderSimpleMarkdown } from "@/lib/utils";
 
 export default async function DsaTopicPage({ params }: { params: { slug: string } }) {
   const resolvedParams = await params;
@@ -74,15 +60,22 @@ export default async function DsaTopicPage({ params }: { params: { slug: string 
       {topicData.data.faqs && topicData.data.faqs.length > 0 && (
         <div className="mt-12">
           <h2 className="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
-          <div className="space-y-6">
+          <div className="space-y-4">
             {topicData.data.faqs.map((faq: any, index: number) => (
-              <div key={index} className="border rounded-lg p-6 bg-card">
-                <h3 className="text-xl font-semibold mb-2">{faq.question}</h3>
-                <div
-                  className="text-muted-foreground"
-                  dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(faq.answer) }}
-                />
-              </div>
+              <details key={index} className="group border rounded-lg bg-card open:ring-2 open:ring-primary/20 transition-all duration-200">
+                <summary className="flex items-center justify-between p-6 cursor-pointer list-none font-semibold text-lg select-none">
+                  <span>{faq.question}</span>
+                  <span className="transition-transform duration-200 group-open:rotate-180">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+                  </span>
+                </summary>
+                <div className="px-6 pb-6 pt-0 text-muted-foreground border-t border-transparent group-open:border-border/50">
+                  <div
+                    className="prose prose-neutral dark:prose-invert max-w-none pt-4"
+                    dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(faq.answer) }}
+                  />
+                </div>
+              </details>
             ))}
           </div>
         </div>

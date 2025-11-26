@@ -86,8 +86,13 @@ export const topics: Topic[] = [
     description: "Complete documentation & Spring Boot integration guide for Senior Engineers.",
   },
   {
-    slug: "17-aws-architecture",
-    title: "AWS Architecture",
-    description: "Architecting Scalable Cloud Infrastructure & DevOps Pipelines.",
+    slug: '17-aws-architecture',
+    title: 'AWS Architecture & Cloud Design Patterns',
+    description: 'A comprehensive guide to AWS services, High Availability architectures, and Cloud Design Patterns for Senior Engineers.'
   },
+  {
+    slug: '18-java-language',
+    title: 'Java Language Architecture',
+    description: 'Deep dive into JVM internals, Memory Model, OOP Pillars, and Modern Java features for Senior Engineering roles.'
+  }
 ];

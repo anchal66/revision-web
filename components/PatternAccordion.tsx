@@ -10,17 +10,8 @@ import {
 } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { CodeBlock } from '@/components/CodeBlock';
-import { cn } from '@/lib/utils'; 
+import { cn, renderSimpleMarkdown } from '@/lib/utils';
 
-// --- Helper Functions (Unchanged) ---
-function renderSimpleMarkdown(text: string): string {
-  if (!text) return "";
-  return text
-    .replace(/contentReference\[.*?\]\{.*?\}/g, '')
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/`(.*?)`/g, '<code>$1</code>')
-    .replace(/\n/g, '<br />');
-}
 // --- Interfaces (Unchanged) ---
 interface PatternSolution {
   problemTitle: string;
@@ -32,7 +23,7 @@ interface Pattern {
   title: string;
   description: string;
   exampleProblems: string[];
-  solutions: PatternSolution[]; 
+  solutions: PatternSolution[];
 }
 
 interface PatternAccordionProps {
@@ -53,7 +44,7 @@ export function PatternAccordion({ patterns }: PatternAccordionProps) {
     patterns.forEach((pattern) => {
       if (pattern.solutions && pattern.solutions.length > 0) {
         const primaryTitle = pattern.solutions[0].problemTitle;
-        
+
         initialActive[pattern.title] = primaryTitle;
         initialPrimary[pattern.title] = primaryTitle;
       }
@@ -62,8 +53,8 @@ export function PatternAccordion({ patterns }: PatternAccordionProps) {
     setActiveSolutionTitle(initialActive);
     setPrimarySolutionTitle(initialPrimary);
   }, [patterns]);
-  
-  
+
+
   // Sets the active solution title (with fallback logic)
   const handleProblemClick = (patternTitle: string, clickedProblemTitle: string) => {
     const pattern = patterns.find(p => p.title === patternTitle);
@@ -71,10 +62,10 @@ export function PatternAccordion({ patterns }: PatternAccordionProps) {
 
     // Determine the title to set based on existence, using the primary as fallback
     let newActiveTitle = pattern.solutions.some(
-        (sol) => sol.problemTitle === clickedProblemTitle
+      (sol) => sol.problemTitle === clickedProblemTitle
     )
-        ? clickedProblemTitle // Clicked problem has a unique solution
-        : primarySolutionTitle[patternTitle]; // Fallback to the stored primary title
+      ? clickedProblemTitle // Clicked problem has a unique solution
+      : primarySolutionTitle[patternTitle]; // Fallback to the stored primary title
 
     setActiveSolutionTitle((prev) => ({
       ...prev,
@@ -94,16 +85,16 @@ export function PatternAccordion({ patterns }: PatternAccordionProps) {
   };
 
   return (
-    <Accordion 
-      type="single" 
-      collapsible 
-      className="w-full" 
+    <Accordion
+      type="single"
+      collapsible
+      className="w-full"
       defaultValue={patterns?.[0]?.title}
     >
       {patterns.map((pattern) => {
         const activeTitle = activeSolutionTitle[pattern.title];
         const primaryTitle = primarySolutionTitle[pattern.title];
-        
+
         // Find the currently active solution object (will be primary if fallback occurred)
         const currentSolution = pattern.solutions.find(
           (sol) => sol.problemTitle === activeTitle
@@ -117,51 +108,51 @@ export function PatternAccordion({ patterns }: PatternAccordionProps) {
             <AccordionTrigger className="text-2xl font-semibold hover:no-underline">
               {pattern.title}
             </AccordionTrigger>
-            
+
             <AccordionContent className="prose-p:text-base prose dark:prose-invert max-w-none">
-              
+
               <div dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(pattern.description) }} />
-              
+
               {/* Example Problems (Now Clickable) */}
               <div className="my-4">
                 <div className='flex items-center gap-3 mb-2'>
-                    <h4 className="font-semibold m-0">Example Problems:</h4>
-                    {/* 3. The new dedicated Primary Solution button */}
-                    {primaryTitle && (
-                        <Badge
-                            variant={isPrimaryActive ? "default" : "secondary"}
-                            className={cn(
-                                'cursor-pointer transition-colors text-xs font-bold',
-                                !isPrimaryActive && 'hover:bg-primary/80'
-                            )}
-                            onClick={() => handlePrimaryClick(pattern.title)}
-                        >
-                            Primary Solution
-                        </Badge>
-                    )}
+                  <h4 className="font-semibold m-0">Example Problems:</h4>
+                  {/* 3. The new dedicated Primary Solution button */}
+                  {primaryTitle && (
+                    <Badge
+                      variant={isPrimaryActive ? "default" : "secondary"}
+                      className={cn(
+                        'cursor-pointer transition-colors text-xs font-bold',
+                        !isPrimaryActive && 'hover:bg-primary/80'
+                      )}
+                      onClick={() => handlePrimaryClick(pattern.title)}
+                    >
+                      Primary Solution
+                    </Badge>
+                  )}
                 </div>
-                
+
                 <div className="flex flex-wrap gap-2">
                   {pattern.exampleProblems.map((problem: string) => {
-                      const problemSolutionExists = pattern.solutions.some(sol => sol.problemTitle === problem);
-                      // Only highlight the badge if it's the exact active solution AND it has a dedicated solution
-                      const isProblemActive = problem === activeTitle && problemSolutionExists;
+                    const problemSolutionExists = pattern.solutions.some(sol => sol.problemTitle === problem);
+                    // Only highlight the badge if it's the exact active solution AND it has a dedicated solution
+                    const isProblemActive = problem === activeTitle && problemSolutionExists;
 
-                      return (
-                        <Badge
-                          variant="outline"
-                          key={problem}
-                          className={cn(
-                            'cursor-pointer transition-colors',
-                            isProblemActive
-                              ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
-                              : 'hover:bg-accent hover:text-accent-foreground'
-                          )}
-                          onClick={() => handleProblemClick(pattern.title, problem)}
-                        >
-                          {problem}
-                        </Badge>
-                      );
+                    return (
+                      <Badge
+                        variant="outline"
+                        key={problem}
+                        className={cn(
+                          'cursor-pointer transition-colors',
+                          isProblemActive
+                            ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                            : 'hover:bg-accent hover:text-accent-foreground'
+                        )}
+                        onClick={() => handleProblemClick(pattern.title, problem)}
+                      >
+                        {problem}
+                      </Badge>
+                    );
                   })}
                 </div>
               </div>
@@ -172,12 +163,12 @@ export function PatternAccordion({ patterns }: PatternAccordionProps) {
                   <h4 className="font-semibold text-lg mb-2">
                     Solution Spotlight: {currentSolution.problemTitle}
                   </h4>
-                  <div 
-                    className="text-sm text-muted-foreground mb-4 prose dark:prose-invert max-w-none" 
+                  <div
+                    className="text-sm text-muted-foreground mb-4 prose dark:prose-invert max-w-none"
                     dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(currentSolution.explanation) }}
                   />
-                  <CodeBlock 
-                    code={currentSolution.code} 
+                  <CodeBlock
+                    code={currentSolution.code}
                     lang="java"
                     filename={`${currentSolution.problemTitle.replace(/\s/g, '')}.java`}
                   />

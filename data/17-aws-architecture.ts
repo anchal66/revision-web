@@ -309,6 +309,90 @@ jobs:
         {
             question: 'What is the purpose of the "Machine User" (IAM-GitHub)?',
             answer: 'It enforces the **Principle of Least Privilege**. Instead of using a Root or Admin account for the CI/CD pipeline, we create a specific user with permissions restricted *only* to the S3 bucket. If these credentials are leaked, the attacker cannot access EC2, RDS, or other services.'
+        },
+        {
+            question: '6. Explain the difference between "VPC Peering" and "Transit Gateway".',
+            answer: '**VPC Peering** is a 1:1 non-transitive connection between two VPCs. It works well for simple meshes but becomes unmanageable at scale ($N^2$ connections). **Transit Gateway (TGW)** is a hub-and-spoke model that connects thousands of VPCs and on-prem networks through a single central gateway, simplifying routing and management.'
+        },
+        {
+            question: '7. What is the difference between EBS, EFS, and Instance Store?',
+            answer: '**EBS (Elastic Block Store):** Network drive attached to one EC2. Persistent, durable, but locked to an AZ. **EFS (Elastic File System):** Network file system (NFS) shared across thousands of EC2s in multiple AZs. Slower than EBS, more expensive. **Instance Store:** Ephemeral disk physically attached to the host. Extremely fast (IOPS), but data is LOST if the instance stops/terminates.'
+        },
+        {
+            question: '8. How does S3 ensure Data Consistency?',
+            answer: 'S3 now provides **Strong Consistency** for all operations (PUT, DELETE, GET). Historically, it was eventually consistent for overwrites. Now, if you write a new object and immediately read it, you are guaranteed to get the latest version.'
+        },
+        {
+            question: '9. What is a "Lambda Cold Start" and how do you mitigate it?',
+            answer: 'A Cold Start occurs when AWS spins up a new execution environment for your function (download code, start runtime), causing latency. **Mitigation:** 1) Use **Provisioned Concurrency** to keep environments warm. 2) Minimize deployment package size. 3) Choose lighter runtimes (Go/Node.js vs Java/Spring).'
+        },
+        {
+            question: '10. Explain DynamoDB "Hot Partitions" and how to avoid them.',
+            answer: 'DynamoDB scales by hashing the **Partition Key** to distribute data across physical nodes. If your access pattern targets a single key heavily (e.g., "User_1"), all traffic hits one node (Hot Partition), causing throttling. **Fix:** Choose a high-cardinality partition key (e.g., UUID) to spread traffic evenly.'
+        },
+        {
+            question: '11. RDS Multi-AZ vs Read Replicas: When to use which?',
+            answer: '**Multi-AZ:** Synchronous replication to a standby in another AZ. Purpose: **Disaster Recovery (High Availability)**. Auto-failover. **Read Replicas:** Asynchronous replication. Purpose: **Scalability**. Offloads read traffic from the primary. No auto-failover.'
+        },
+        {
+            question: '12. What is the difference between SQS and SNS?',
+            answer: '**SQS (Simple Queue Service):** Decoupling via **Queue** (1:1). Consumer polls messages. Guaranteed delivery. **SNS (Simple Notification Service):** Decoupling via **Pub/Sub** (1:Many). Publisher pushes to Topic, multiple subscribers (SQS, Email, Lambda) receive it immediately.'
+        },
+        {
+            question: '13. How do you implement Blue/Green Deployment in AWS?',
+            answer: 'Blue/Green reduces downtime and risk. **Strategy:** 1) **Route 53:** Weighted routing (shift traffic 10% -> 100%). 2) **Elastic Beanstalk:** Swap Environment URLs. 3) **CodeDeploy:** Deploys to new Auto Scaling Group and switches Load Balancer target group.'
+        },
+        {
+            question: '14. What are RTO and RPO in Disaster Recovery?',
+            answer: '**RTO (Recovery Time Objective):** How long can you afford to be down? (e.g., 1 hour). **RPO (Recovery Point Objective):** How much data can you afford to lose? (e.g., 5 minutes of data). Lower RTO/RPO = Higher Cost (Multi-Region Active-Active).'
+        },
+        {
+            question: '15. When should you use Spot Instances?',
+            answer: 'Spot Instances offer up to 90% discount but can be interrupted with 2 minutes notice. Use them for **Stateless, Fault-Tolerant** workloads: Batch processing, CI/CD runners, High Performance Computing (HPC), and background image rendering. Never for Databases.'
+        },
+        {
+            question: '16. What is the difference between AWS WAF and AWS Shield?',
+            answer: '**WAF (Web Application Firewall):** Protects against Layer 7 attacks (SQL Injection, XSS, Geo-blocking). You define rules. **Shield:** Protects against DDoS attacks. **Shield Standard:** Free, Layer 3/4 protection. **Shield Advanced:** Paid, Layer 7 protection + Cost Protection + DDoS Response Team (DRT).'
+        },
+        {
+            question: '17. Secrets Manager vs Systems Manager (SSM) Parameter Store?',
+            answer: '**Parameter Store:** Free (mostly), stores strings/passwords. Good for config. **Secrets Manager:** Paid, specifically for DB credentials/API keys. Key Feature: **Automatic Rotation** of RDS credentials (changes password in DB and Secret automatically).'
+        },
+        {
+            question: '18. ECS vs EKS: How to choose?',
+            answer: '**ECS (Elastic Container Service):** AWS-native, simple, opinionated. Best for teams who just want to run containers without managing k8s complexity. **EKS (Elastic Kubernetes Service):** Managed Kubernetes. Best for open-source compatibility, complex orchestration, and multi-cloud portability.'
+        },
+        {
+            question: '19. How does API Gateway handle throttling?',
+            answer: 'API Gateway uses the **Token Bucket Algorithm**. You set a **Rate Limit** (requests/sec) and a **Burst Limit** (max concurrent). If limits are exceeded, it returns `429 Too Many Requests`. You can configure Usage Plans and API Keys to monetize or restrict specific clients.'
+        },
+        {
+            question: '20. CloudWatch vs CloudTrail: What is the difference?',
+            answer: '**CloudWatch:** Monitoring & Observability. Metrics (CPU, Memory), Logs (App logs), Alarms. "What is happening?". **CloudTrail:** Auditing & Compliance. Records **API Calls** (Who did what, where, and when?). "Who deleted the database?".'
+        },
+        {
+            question: '21. Explain S3 Storage Classes (Standard vs Intelligent Tiering vs Glacier).',
+            answer: '**Standard:** Hot data, ms access, expensive. **Intelligent Tiering:** Auto-moves data between tiers based on access patterns (Cost-effective for unknown patterns). **Glacier:** Cold archival, min storage duration (90 days), retrieval takes minutes/hours. Cheapest.'
+        },
+        {
+            question: '22. What is a VPC Endpoint (Interface vs Gateway)?',
+            answer: 'Allows private connection to AWS services without traversing the public internet (IGW/NAT). **Gateway Endpoint:** S3 & DynamoDB only. Free. Uses Route Table. **Interface Endpoint (PrivateLink):** All other services (EC2, SNS). Paid ($/hr). Uses ENI (Elastic Network Interface) in your subnet.'
+        },
+        {
+            question: '23. How does Route 53 "Latency Based Routing" work?',
+            answer: 'Route 53 directs traffic to the AWS Region that provides the lowest latency (fastest response) for the user. It uses network latency measurements collected by AWS globally. Ideal for global applications serving users from multiple regions.'
+        },
+        {
+            question: '24. What is "Connection Draining" (Deregistration Delay) in ELB?',
+            answer: 'When an instance is deregistered (or unhealthy), the Load Balancer stops sending NEW requests but keeps existing connections open for a set time (e.g., 300s) to allow in-flight requests to complete. Prevents cutting off users mid-transaction during deployments.'
+        },
+        {
+            question: '25. Explain the "Strangler Fig Pattern" in Cloud Migration.',
+            answer: 'A strategy to migrate legacy monoliths to microservices. You place a proxy (API Gateway/ALB) in front of the legacy system. You gradually build new microservices for specific features and route traffic to them, "strangling" the monolith until it can be decommissioned.'
+        },
+        {
+            question: '26. What is "Cross-Region Replication" (CRR) in S3?',
+            answer: 'CRR automatically replicates every object uploaded to a source bucket to a destination bucket in a different AWS Region. Used for **Disaster Recovery**, **Compliance** (data sovereignty), and **Lower Latency** access for global users.'
         }
     ]
 };

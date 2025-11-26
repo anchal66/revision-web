@@ -296,32 +296,116 @@ public KStream<String, String> kStream(StreamsBuilder builder) {
     ],
     faqs: [
         {
-            question: 'What is the "High Watermark" and "Log End Offset"?',
-            answer: '**Log End Offset (LEO)** is the offset of the last message written to the log leader. **High Watermark (HW)** is the offset of the last message successfully replicated to all In-Sync Replicas. Consumers can only read up to the HW to ensure consistency.'
+            question: '1. What is the difference between RabbitMQ and Kafka?',
+            answer: '**RabbitMQ** is a traditional message broker (Smart Broker, Dumb Consumer) that pushes messages to consumers and tracks their state. It is best for complex routing and low throughput. **Kafka** is a distributed event streaming platform (Dumb Broker, Smart Consumer) where consumers pull messages. Kafka persists messages on disk (Distributed Commit Log), allowing for replayability and massive throughput (millions of events/sec).'
         },
         {
-            question: 'Explain "Consumer Lag" and how to monitor it.',
-            answer: 'Lag is the difference between the Producer\'s latest offset (LEO) and the Consumer\'s current offset. High lag means the consumer is falling behind. Monitor it using **Burrow**, **Prometheus/Grafana**, or **Confluent Control Center**.'
+            question: '2. Explain the role of Zookeeper in Kafka. Why is it being removed (KRaft)?',
+            answer: 'Historically, **Zookeeper** managed cluster metadata (Topic configuration, ACLs) and Leader Election (Controller selection). It was a bottleneck because all metadata writes had to go through it. **KRaft (Kafka Raft)** removes this dependency by embedding the Raft consensus protocol directly into Kafka brokers. This simplifies deployment (one binary), improves scalability (millions of partitions), and speeds up recovery times.'
         },
         {
-            question: 'How does Kafka handle "Split Brain" scenarios?',
-            answer: 'Kafka uses a **Controller** (one of the brokers) elected via Zookeeper (or KRaft quorum) to manage state. Epoch numbers (Controller Epoch, Leader Epoch) are used to prevent zombie leaders from accepting writes. If a broker is cut off, it realizes its epoch is old and steps down.'
+            question: '3. What are "In-Sync Replicas" (ISR) and why do they matter?',
+            answer: 'An **ISR** is a replica that is fully caught up with the Leader partition. Only a member of the ISR is eligible to be elected as a new Leader if the current Leader fails. If you set `min.insync.replicas=2` and only 1 replica is alive, the broker will reject writes (`acks=all`) to prevent data loss, trading availability for consistency.'
         },
         {
-            question: 'What is Log Compaction?',
-            answer: 'Log Compaction retains only the *latest* value for each key in the log, deleting older versions. This is useful for restoring state (e.g., a KTable or a database snapshot) without replaying the entire history.'
+            question: '4. How does Kafka guarantee message ordering?',
+            answer: 'Kafka guarantees ordering **only within a partition**, not across the entire topic. If you need strict ordering for a specific entity (e.g., all events for User ID 123), you must use that entity ID as the **Message Key**. Kafka hashes the key to ensure all messages with the same key go to the same partition.'
         },
         {
-            question: 'Why is Zookeeper being replaced by KRaft?',
-            answer: 'Zookeeper was an external dependency that added operational complexity and limited scalability (metadata bottleneck). **KRaft** embeds the Raft consensus protocol directly into Kafka brokers, allowing for a single binary, faster failover, and support for millions of partitions.'
+            question: '5. What is "Consumer Lag" and how do you monitor/fix it?',
+            answer: '**Consumer Lag** is the difference between the latest offset in the partition (High Watermark) and the offset the consumer has processed. High lag means the consumer is falling behind. **Fixes:** 1) Add more consumers (up to the number of partitions). 2) Optimize consumer logic (processing time). 3) Tune `max.poll.records`. **Monitoring:** Use tools like Burrow, Prometheus (JMX Exporter), or Confluent Control Center.'
         },
         {
-            question: 'What is the difference between `auto.offset.reset` "earliest" vs "latest"?',
-            answer: 'This setting determines behavior when a consumer starts but has no committed offset. **latest** (default): Read only new messages arriving after startup. **earliest**: Read all available history in the topic from the beginning.'
+            question: '6. Explain "Exactly-Once Semantics" (EOS) in Kafka.',
+            answer: 'EOS ensures that a message is processed exactly once, even in the event of failures. It requires two parts: 1) **Idempotent Producer:** Assigns sequence numbers to batches so the broker can deduplicate retries. 2) **Transactional API:** Allows writing to multiple topics and offsets atomically (`read-process-write`). Consumers must be configured with `isolation.level=read_committed` to ignore aborted transactions.'
         },
         {
-            question: 'How do you handle large messages (>1MB)?',
-            answer: 'Kafka is optimized for small messages. For large ones: 1) Use **Compression** (Gzip/Zstd). 2) Increase `max.message.bytes` (broker) and `max.request.size` (producer). 3) **Claim Check Pattern**: Store payload in S3/Blob Store and send only the reference URL in Kafka.'
+            question: '7. What happens if a Consumer crashes? (Rebalancing)',
+            answer: 'When a consumer stops sending heartbeats (session timeout), the Group Coordinator triggers a **Rebalance**. Partitions assigned to the dead consumer are reassigned to other active members. During a default "Eager" rebalance, all consumers stop processing ("Stop the World"). **Cooperative Rebalancing** (Incremental) fixes this by only moving the necessary partitions, keeping the rest active.'
+        },
+        {
+            question: '8. What is "Log Compaction"?',
+            answer: 'Standard retention deletes old logs based on time (e.g., 7 days) or size. **Log Compaction** retains the *latest* value for every message key, deleting older versions of that key. This is ideal for restoring state (e.g., a KTable, User Profile cache) because the consumer only needs to read the final state, not the entire history of updates.'
+        },
+        {
+            question: '9. How do you handle "Poison Pill" messages?',
+            answer: 'A Poison Pill is a malformed message that causes the consumer to crash or throw an exception repeatedly. Since Kafka doesn\'t delete the message, the consumer restarts, reads the same message, and crashes again (infinite loop). **Solution:** Configure a `DefaultErrorHandler` with a `DeadLetterPublishingRecoverer`. After N retries, the message is moved to a **Dead Letter Topic (DLT)** for manual inspection, allowing the consumer to skip it and proceed.'
+        },
+        {
+            question: '10. What is the difference between `acks=0`, `acks=1`, and `acks=all`?',
+            answer: '**acks=0:** Producer sends and doesn\'t wait. Fastest, highest risk of data loss. **acks=1:** Leader acknowledges write. Data is lost if Leader crashes before replicating. **acks=all (or -1):** Leader AND all In-Sync Replicas acknowledge. Highest durability, slowest latency. Required for financial data.'
+        },
+        {
+            question: '11. How does Kafka achieve high throughput (Zero-Copy)?',
+            answer: 'Kafka uses the Linux `sendfile` system call (Zero-Copy). This transfers data directly from the **OS Page Cache** to the **Network Socket**, bypassing the JVM Heap entirely. This reduces CPU context switches and Garbage Collection overhead. Additionally, Kafka relies on **Sequential I/O** (append-only logs), which is significantly faster than random disk access.'
+        },
+        {
+            question: '12. What is the "High Watermark"?',
+            answer: 'The **High Watermark (HW)** is the offset of the last message that has been successfully replicated to all In-Sync Replicas. Consumers can only read up to the HW. This prevents "Uncommitted Reads" where a consumer reads a message from the Leader, but the Leader crashes and the message is lost because it wasn\'t replicated.'
+        },
+        {
+            question: '13. Can you have more Consumers than Partitions?',
+            answer: 'No (in the same Consumer Group). If you have 10 partitions and 15 consumers, 5 consumers will be **Idle** (Starving). Each partition can be consumed by only ONE consumer per group to guarantee ordering. To scale consumption, you must increase the number of partitions.'
+        },
+        {
+            question: '14. What is a "Sticky Partitioner"?',
+            answer: 'In older versions, the producer used Round-Robin, sending one message to P1, next to P2, etc. This caused high fragmentation and small batches. The **Sticky Partitioner** sticks to a specific partition for a duration (or until the batch is full) before switching. This increases batch efficiency and throughput without sacrificing load balancing over time.'
+        },
+        {
+            question: '15. How do you upgrade a Kafka Cluster with zero downtime?',
+            answer: 'Perform a **Rolling Restart**. 1) Update the config/binary on Broker 1. 2) Restart Broker 1. The Controller will move leadership to other replicas. 3) Wait for Broker 1 to rejoin the ISR. 4) Repeat for Broker 2, etc. This ensures the cluster remains available throughout the process.'
+        },
+        {
+            question: '16. What is the difference between `auto.offset.reset` "earliest" vs "latest"?',
+            answer: 'This config determines what a consumer does when it starts up and finds NO existing committed offset (e.g., new group). **latest (Default):** Ignore history, read only new messages arriving from now on. **earliest:** Go back to the beginning of the log and read everything. Critical for replaying data.'
+        },
+        {
+            question: '17. What is the `__consumer_offsets` topic?',
+            answer: 'It is an internal Kafka topic that stores the committed offsets for every consumer group. When a consumer commits an offset, a message is written to this topic. The key is `[group_id, topic, partition]` and the value is the offset. It is compacted by default to keep only the latest offset.'
+        },
+        {
+            question: '18. Explain "Rack Awareness" in Kafka.',
+            answer: 'Rack Awareness ensures that replicas of the same partition are spread across different physical racks or availability zones. If a rack fails, data is not lost because a replica exists on another rack. It is configured using `broker.rack` and ensures higher availability and durability.'
+        },
+        {
+            question: '19. What is "Unclean Leader Election"?',
+            answer: 'If the Leader fails and NO In-Sync Replicas (ISR) are available, Kafka can choose to elect an out-of-sync replica as the new Leader. This preserves availability but causes **Data Loss** (messages not yet replicated to that follower are lost). Controlled by `unclean.leader.election.enable` (Default: false).'
+        },
+        {
+            question: '20. How do you handle large messages (>1MB) in Kafka?',
+            answer: 'Kafka is optimized for small messages (1-10KB). For large messages: 1) **Compression:** Use Gzip/Zstd/Snappy. 2) **Configuration:** Increase `message.max.bytes` (Broker) and `max.request.size` (Producer). 3) **Claim Check Pattern:** Store the large payload in S3/Blob Store and send only the reference URL in the Kafka message.'
+        },
+        {
+            question: '21. What is the difference between "Compaction" and "Deletion" retention policies?',
+            answer: '**Deletion (Default):** Discards old segments based on time (`log.retention.hours`) or size (`log.retention.bytes`). **Compaction:** Retains the *latest* value for each key indefinitely. Useful for restoring state (e.g., user profiles) where intermediate updates don\'t matter, only the final state does.'
+        },
+        {
+            question: '22. Explain the "Controller" node in a Kafka Cluster.',
+            answer: 'The Controller is a broker responsible for administrative tasks: maintaining the list of active brokers, electing partition leaders, and managing topic creation/deletion. In Zookeeper mode, one broker is elected Controller. In KRaft mode, a Quorum Controller manages metadata.'
+        },
+        {
+            question: '23. What are "Partition Assignment Strategies"?',
+            answer: 'They determine how partitions are assigned to consumers in a group. 1) **Range:** Assigns contiguous ranges of partitions (good for co-partitioned topics). 2) **RoundRobin:** Distributes evenly (good for general load balancing). 3) **Sticky:** Minimizes movement during rebalances. 4) **CooperativeSticky:** Incremental rebalancing to avoid "stop-the-world" pauses.'
+        },
+        {
+            question: '24. How does Kafka support Multi-Tenancy (Quotas)?',
+            answer: 'Kafka enforces quotas to prevent a single client from monopolizing resources. Quotas can be set on **Network Bandwidth** (bytes/sec) and **Request Rate** (CPU percentage). They can be applied per User, Client ID, or both.'
+        },
+        {
+            question: '25. What is the role of the "Schema Registry"?',
+            answer: 'It acts as a central repository for schemas (Avro/Protobuf). Producers register schemas, and Consumers retrieve them. It enforces **Compatibility Rules** (Backward/Forward) to prevent "Bad Data" (e.g., missing fields) from breaking consumers. It decouples schema evolution from code changes.'
+        },
+        {
+            question: '26. How does an Idempotent Producer work internally?',
+            answer: 'The broker assigns a **Producer ID (PID)** to each producer. The producer assigns a **Sequence Number** to each message batch. The broker tracks the last committed sequence number for that PID. If it receives a batch with a sequence number <= last committed, it treats it as a duplicate and discards it (Ack).'
+        },
+        {
+            question: '27. What is "Kafka Connect" and when should you use it?',
+            answer: 'Kafka Connect is a framework for streaming data between Kafka and external systems (DBs, S3, ES). Use it for **Integration** (moving data) rather than writing custom Producer/Consumer code. It handles scalability, offset management, and error handling out-of-the-box.'
+        },
+        {
+            question: '28. Explain "Page Cache" and why Kafka uses it.',
+            answer: 'Kafka relies on the OS **Page Cache** (RAM) to store log segments. Writes go to the Page Cache (fast), and the OS flushes them to disk asynchronously. Reads often come directly from Page Cache (RAM speed). This avoids double buffering (JVM Heap + OS Cache) and reduces GC overhead.'
         }
     ]
 };
