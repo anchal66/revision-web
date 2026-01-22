@@ -97,9 +97,7 @@ function TimelineItem({ step, index, type }: { step: any, index: number, type: '
                     <div className="flex flex-col items-end gap-2 shrink-0">
                         {step.pdfUrl && (
                             <Link
-                                href={step.pdfUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                href={`/view?pdf=${encodeURIComponent(step.pdfUrl)}&title=${encodeURIComponent(step.title)}`}
                                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-red-100 text-red-600 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50 transition-colors"
                             >
                                 <FileText className="w-3.5 h-3.5" />
