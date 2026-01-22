@@ -2,9 +2,10 @@
 
 import React from 'react';
 import { learningPaths } from '@/data/learning-paths';
-import { CheckCircle2, Circle, Lock, Star, ChevronDown, BookOpen } from 'lucide-react';
+import { CheckCircle2, Circle, Lock, Star, ChevronDown, BookOpen, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 
 interface TimelineViewProps {
     path: typeof learningPaths[0];
@@ -93,11 +94,25 @@ function TimelineItem({ step, index, type }: { step: any, index: number, type: '
                         )}
                     </div>
 
-                    <button className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
-                            View Details
-                        </div>
-                    </button>
+                    <div className="flex flex-col items-end gap-2 shrink-0">
+                        {step.pdfUrl && (
+                            <Link
+                                href={step.pdfUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-red-100 text-red-600 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50 transition-colors"
+                            >
+                                <FileText className="w-3.5 h-3.5" />
+                                <span>Read PDF</span>
+                            </Link>
+                        )}
+
+                        <button className="opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                                View Details
+                            </div>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

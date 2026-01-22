@@ -219,7 +219,9 @@ export function Sidebar() {
                                                             {revisionResources.map((res) => (
                                                                 <Link
                                                                     key={res.id}
-                                                                    href="/learn#resources"
+                                                                    href={res.pdfUrl || '/learn#resources'}
+                                                                    target={res.pdfUrl ? '_blank' : undefined}
+                                                                    rel={res.pdfUrl ? 'noopener noreferrer' : undefined}
                                                                     onClick={() => setIsOpen(false)}
                                                                     className="block px-3 py-1 text-xs text-muted-foreground hover:text-primary transition-colors truncate hover:bg-sidebar-accent/20 rounded-sm"
                                                                     title={res.title}
