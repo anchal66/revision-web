@@ -17,18 +17,16 @@ export async function generateStaticParams() {
 }
 
 interface PathPageProps {
-    params: {
+    params: Promise<{
         slug: string;
-    };
+    }>;
 }
 
-export default function PathDetailsPage({ params }: PathPageProps) {
-    // If you need params in a client component, you might need to use `useParams`.
-    // In a server component, `params` is passed directly as a prop.
-    // However, in standard Next.js 13+, params is an object.
+export default async function PathDetailsPage({ params }: PathPageProps) {
+    const resolvedParams = await params;
 
     // Find path data
-    const path = learningPaths.find((p) => p.slug === params.slug);
+    const path = learningPaths.find((p) => p.slug === resolvedParams.slug);
 
     if (!path) {
         notFound();
