@@ -48,6 +48,32 @@ export function Sidebar() {
         };
     }, []);
 
+    // Determine which accordion should be open based on current pathname
+    const activeAccordion = useMemo(() => {
+        // Check if on DSA page or a DSA topic
+        if (pathname === '/dsa' || treeData.dsa.some(t => pathname === `/${t.slug}`)) {
+            return 'dsa';
+        }
+        // Check if on Technology page or a tech topic
+        if (pathname === '/technology' || treeData.tech.some(t => pathname === `/${t.slug}`)) {
+            return 'tech';
+        }
+        // Check if on Career Paths
+        if (pathname.startsWith('/learn') || pathname === '/view') {
+            return 'career';
+        }
+        return undefined;
+    }, [pathname, treeData]);
+
+    // Determine which inner Career Path accordion should be open
+    const activeCareerPath = useMemo(() => {
+        const match = pathname.match(/^\/learn\/([^\/]+)/);
+        if (match) {
+            return match[1]; // e.g., 'sde-1', 'sde-2', etc.
+        }
+        return undefined;
+    }, [pathname]);
+
     return (
         <>
             {/* Mobile Menu Button */}
@@ -72,7 +98,7 @@ export function Sidebar() {
                             <BookOpen className="w-5 h-5 text-primary" />
                         </div>
                         <span className="font-bold text-lg tracking-tight text-sidebar-foreground">
-                            Revision<span className="text-primary">.io</span>
+                            Interview<span className="text-primary">Revision</span>
                         </span>
                     </Link>
                 </div>
@@ -109,7 +135,12 @@ export function Sidebar() {
                                 Topics Tree
                             </h3>
 
-                            <Accordion type="multiple" defaultValue={['dsa', 'tech']} className="w-full">
+                            <Accordion
+                                type="single"
+                                collapsible
+                                value={activeAccordion}
+                                className="w-full"
+                            >
                                 {/* DSA Section */}
                                 <AccordionItem value="dsa" className="border-none">
                                     <AccordionTrigger className="py-2 px-3 text-sm font-medium hover:bg-sidebar-accent/30 rounded-md hover:no-underline text-sidebar-foreground">
@@ -178,8 +209,13 @@ export function Sidebar() {
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-2">
                                         <div className="pl-4 space-y-2 mt-1 border-l ml-3 border-sidebar-border">
-                                            {/* Sub-Accordion for each Path */}
-                                            <Accordion type="multiple" className="w-full">
+                                            {/* Sub-Accordion for each Path - also single/collapsible */}
+                                            <Accordion
+                                                type="single"
+                                                collapsible
+                                                value={activeCareerPath}
+                                                className="w-full"
+                                            >
                                                 {learningPaths.map((path) => (
                                                     <AccordionItem key={path.slug} value={path.slug} className="border-none">
                                                         <AccordionTrigger className="py-1.5 px-3 text-sm font-normal text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/30 rounded-md hover:no-underline">

@@ -33,7 +33,7 @@ export function TimelineView({ path }: TimelineViewProps) {
 
                     <div className="space-y-6">
                         {commonSteps.map((step, index) => (
-                            <TimelineItem key={step.id} step={step} index={index + 1} type="common" />
+                            <TimelineItem key={step.id} step={step} index={index + 1} type="common" pathSlug={path.slug} />
                         ))}
                     </div>
                 </div>
@@ -53,7 +53,7 @@ export function TimelineView({ path }: TimelineViewProps) {
 
                 <div className="space-y-6">
                     {levelSteps.map((step, index) => (
-                        <TimelineItem key={step.id} step={step} index={index + 1} type="main" />
+                        <TimelineItem key={step.id} step={step} index={index + 1} type="main" pathSlug={path.slug} />
                     ))}
                 </div>
             </div>
@@ -61,7 +61,7 @@ export function TimelineView({ path }: TimelineViewProps) {
     );
 }
 
-function TimelineItem({ step, index, type }: { step: any, index: number, type: 'common' | 'main' }) {
+function TimelineItem({ step, index, type, pathSlug }: { step: any, index: number, type: 'common' | 'main', pathSlug: string }) {
     return (
         <div id={step.id} className="relative group pl-14 scroll-mt-24">
             {/* Connector Line Dot */}
@@ -97,7 +97,7 @@ function TimelineItem({ step, index, type }: { step: any, index: number, type: '
                     <div className="flex flex-col items-end gap-2 shrink-0">
                         {step.pdfUrl && (
                             <Link
-                                href={`/view?pdf=${encodeURIComponent(step.pdfUrl)}&title=${encodeURIComponent(step.title)}`}
+                                href={`/view?pdf=${encodeURIComponent(step.pdfUrl)}&title=${encodeURIComponent(step.title)}&back=${encodeURIComponent(`/learn/${pathSlug}`)}`}
                                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-red-100 text-red-600 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50 transition-colors"
                             >
                                 <FileText className="w-3.5 h-3.5" />

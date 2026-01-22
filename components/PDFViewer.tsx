@@ -161,7 +161,7 @@ export function PDFViewer({ pdfUrl, title, backUrl = '/learn' }: PDFViewerProps)
             {/* Watermark Overlay (optional - can be enabled) */}
             {/* <div className="fixed inset-0 pointer-events-none flex items-center justify-center opacity-5">
                 <span className="text-6xl font-bold text-foreground rotate-[-30deg]">
-                    Revision.io
+                    Interview Revision
                 </span>
             </div> */}
         </div>

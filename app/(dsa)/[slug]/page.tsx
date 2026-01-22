@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     return notFound();
   }
   return {
-    title: `${topic.title} | DSA Revision`,
+    title: `${topic.title} | Interview Revision`,
     description: topic.description,
   };
 }

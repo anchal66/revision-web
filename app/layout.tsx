@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const outfit = Outfit({ subsets: ["latin"], variable: '--font-outfit' });
 
 export const metadata: Metadata = {
-  title: "Interview Revision |  DSA Revision",
+  title: "Interview Revision",
   description: "A pattern-based guide for senior software engineer interviews.",
 };
 
