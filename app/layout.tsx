@@ -11,8 +11,34 @@ const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const outfit = Outfit({ subsets: ["latin"], variable: '--font-outfit' });
 
 export const metadata: Metadata = {
-  title: "Interview Revision",
-  description: "A pattern-based guide for senior software engineer interviews.",
+  title: {
+    default: "Interview Revision",
+    template: "%s | Interview Revision"
+  },
+  description: "Comprehensive technical interview preparation for Software Engineers. Master Data Structures, Algorithms, System Design, and Career Paths.",
+  keywords: ["DSA", "System Design", "Interview Preparation", "Software Engineering", "Java", "Spring Boot", "Microservices", "Career Paths"],
+  authors: [{ name: "Interview Revision Team" }],
+  creator: "Interview Revision",
+  publisher: "Interview Revision",
+  metadataBase: new URL('https://interview-revision.vercel.app'),
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://interview-revision.vercel.app',
+    title: 'Interview Revision - Master Your Tech Interview',
+    description: 'A pattern-based guide for senior software engineer interviews. Curated learning paths for SDE-1 to Senior Lead roles.',
+    siteName: 'Interview Revision',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Interview Revision',
+    description: 'Master your technical interview with structured learning paths.',
+    creator: '@interviewrevision',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  }
 };
 
 export default function RootLayout({

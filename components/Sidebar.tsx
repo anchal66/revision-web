@@ -278,16 +278,7 @@ export function Sidebar() {
                     </div>
                 </div>
 
-                {/* Footer / User Area */}
-                <div className="p-4 border-t border-sidebar-border shrink-0 bg-sidebar">
-                    <button className="flex items-center gap-3 w-full p-2 rounded-md hover:bg-sidebar-accent/50 transition-colors">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-purple-500" />
-                        <div className="text-left">
-                            <p className="text-sm font-medium text-sidebar-foreground">Guest User</p>
-                            <p className="text-xs text-muted-foreground">Sign in to sync</p>
-                        </div>
-                    </button>
-                </div>
+                {/* Footer Area Removed as per requirement */}
             </aside>
 
             {/* Overlay for mobile */}
