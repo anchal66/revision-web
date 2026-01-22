@@ -1,5 +1,15 @@
 import { topics } from "@/data/topics";
 import { TopicBrowser } from "@/components/TopicBrowser";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Data Structures & Algorithms | Interview Revision',
+    description: 'Comprehensive DSA interview preparation. Master Arrays, Trees, Graphs, Dynamic Programming, and more with curated patterns and questions.',
+    openGraph: {
+        title: 'Data Structures & Algorithms - Interview Revision',
+        description: 'Master DSA patterns for your technical interview.',
+    },
+};
 
 export default function DsaPage() {
     const dsaTopics = topics.filter(t => t.category === 'DSA');

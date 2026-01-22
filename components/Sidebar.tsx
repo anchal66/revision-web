@@ -218,10 +218,10 @@ export function Sidebar() {
                                             >
                                                 {learningPaths.map((path) => (
                                                     <AccordionItem key={path.slug} value={path.slug} className="border-none">
-                                                        <AccordionTrigger className="py-1.5 px-3 text-sm font-normal text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/30 rounded-md hover:no-underline">
-                                                            <div className="flex items-center gap-2">
-                                                                <ChevronRight className="w-3 h-3 text-muted-foreground" />
-                                                                <span className="truncate">{path.title}</span>
+                                                        <AccordionTrigger className="py-1.5 px-3 text-sm font-normal text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/30 rounded-md hover:no-underline [&[data-state=open]>div>svg]:rotate-90">
+                                                            <div className="flex items-center gap-2 w-full min-w-0">
+                                                                <ChevronRight className="w-3 h-3 text-muted-foreground shrink-0 transition-transform duration-200" />
+                                                                <span className="truncate flex-1 text-left" title={path.title}>{path.title}</span>
                                                             </div>
                                                         </AccordionTrigger>
                                                         <AccordionContent className="pb-1">

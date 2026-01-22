@@ -1,5 +1,15 @@
 import { topics } from "@/data/topics";
 import { TopicBrowser } from "@/components/TopicBrowser";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'System Design & Technology | Interview Revision',
+    description: 'Deep dive into System Design, Java, Spring Boot, Microservices, and Cloud Architecture for Senior Software Engineer interviews.',
+    openGraph: {
+        title: 'System Design & Tech - Interview Revision',
+        description: 'Master System Design and Technology concepts for senior roles.',
+    },
+};
 
 export default function TechnologyPage() {
     const techTopics = topics.filter(t =>

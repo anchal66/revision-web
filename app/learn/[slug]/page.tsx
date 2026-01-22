@@ -16,6 +16,27 @@ export async function generateStaticParams() {
     }));
 }
 
+export async function generateMetadata({ params }: PathPageProps) {
+    const resolvedParams = await params;
+    const path = learningPaths.find((p) => p.slug === resolvedParams.slug);
+
+    if (!path) {
+        return {
+            title: 'Path Not Found | Interview Revision',
+            description: 'The requested learning path could not be found.'
+        };
+    }
+
+    return {
+        title: `${path.title} | Interview Revision`,
+        description: `${path.title} (${path.experienceRange}). ${path.description} Includes ${path.steps.length} comprehensive steps.`,
+        openGraph: {
+            title: `${path.title} - Career Path`,
+            description: path.description,
+        }
+    };
+}
+
 interface PathPageProps {
     params: Promise<{
         slug: string;

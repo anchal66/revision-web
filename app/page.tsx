@@ -4,6 +4,17 @@ import Link from "next/link";
 import { GraduationCap, Code, Server, ArrowRight, BookOpen, Sparkles } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Home | Interview Revision',
+  description: 'Master your next technical interview with structured learning paths, curated topics, and comprehensive revision notes for SDE I, II, III, and Lead roles.',
+  openGraph: {
+    title: 'Interview Revision - ACE Your Technical Interviews',
+    description: 'Structured learning paths and curated revision notes for Software Engineers.',
+    images: [{ url: '/opengraph-image' }],
+  },
+};
 
 export default function Home() {
   // Get counts for quick stats

@@ -17,7 +17,6 @@ interface PDFViewerProps {
 }
 
 export function PDFViewer({ pdfUrl, title, backUrl = '/learn' }: PDFViewerProps) {
-    const [hideFooter, setHideFooter] = useState<boolean>(true); // Default to true as per user request
     const [removeBackground, setRemoveBackground] = useState<boolean>(false);
     const [numPages, setNumPages] = useState<number>(0);
     const [pageNumber, setPageNumber] = useState<number>(1);
@@ -40,7 +39,6 @@ export function PDFViewer({ pdfUrl, title, backUrl = '/learn' }: PDFViewerProps)
     const zoomIn = () => setScale((prev) => Math.min(prev + 0.2, 2.5));
     const zoomOut = () => setScale((prev) => Math.max(prev - 0.2, 0.5));
     const toggleBlendMode = () => setRemoveBackground(!removeBackground);
-    const toggleFooter = () => setHideFooter(!hideFooter);
 
     // Prevent right-click context menu
     const handleContextMenu = (e: React.MouseEvent) => {
@@ -75,17 +73,6 @@ export function PDFViewer({ pdfUrl, title, backUrl = '/learn' }: PDFViewerProps)
 
                     {/* Controls */}
                     <div className="flex items-center gap-2">
-                        {/* Footer Toggle */}
-                        <Button
-                            variant={hideFooter ? "secondary" : "ghost"}
-                            size="sm"
-                            onClick={toggleFooter}
-                            title="Hide Footer Text"
-                            className="hidden sm:flex text-xs h-8"
-                        >
-                            {hideFooter ? "Header Only" : "Full Page"}
-                        </Button>
-
                         {/* Blend Toggle */}
                         <Button
                             variant={removeBackground ? "secondary" : "ghost"}
@@ -175,10 +162,13 @@ export function PDFViewer({ pdfUrl, title, backUrl = '/learn' }: PDFViewerProps)
                     className={cn(loading && 'hidden')}
                 >
                     <div
-                        className={cn("relative overflow-hidden transition-all duration-300 rounded-lg shadow-2xl")}
+                        className={cn(
+                            "relative overflow-hidden transition-all duration-300 rounded-lg shadow-2xl",
+                            "bg-white dark:bg-transparent"
+                        )}
                         style={{
-                            clipPath: hideFooter ? 'inset(0 0 45px 0)' : undefined,
-                            marginBottom: hideFooter ? '-45px' : undefined
+                            clipPath: 'inset(0 0 45px 0)',
+                            marginBottom: '-45px'
                         }}
                     >
                         <Page
@@ -188,9 +178,9 @@ export function PDFViewer({ pdfUrl, title, backUrl = '/learn' }: PDFViewerProps)
                             renderAnnotationLayer={false}
                             className={cn(
                                 "transition-all duration-300",
-                                removeBackground && "mix-blend-multiply dark:mix-blend-screen dark:invert"
+                                removeBackground && "mix-blend-multiply grayscale contrast-125 dark:mix-blend-screen dark:invert dark:contrast-100"
                             )}
-                            height={hideFooter ? undefined : undefined}
+                            height={undefined}
                         />
                     </div>
                 </Document>
@@ -203,6 +193,6 @@ export function PDFViewer({ pdfUrl, title, backUrl = '/learn' }: PDFViewerProps)
                     Interview Revision
                 </span>
             </div>
-        </div>
+        </div >
     );
 }
