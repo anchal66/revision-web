@@ -62,7 +62,7 @@ export function TimelineView({ path }: TimelineViewProps) {
 
 function TimelineItem({ step, index, type }: { step: any, index: number, type: 'common' | 'main' }) {
     return (
-        <div className="relative group pl-14">
+        <div id={step.id} className="relative group pl-14 scroll-mt-24">
             {/* Connector Line Dot */}
             <div className={cn(
                 "absolute left-4 w-4 h-4 rounded-full border-2 transform -translate-x-1/2 mt-1.5 transition-colors duration-300 z-10 bg-background",

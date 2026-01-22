@@ -8,16 +8,17 @@ import {
     BookOpen,
     LayoutGrid,
     Code,
-    Layers,
     Menu,
     X,
     GraduationCap,
     Server,
-    Cloud,
-    ChevronDown
+    FileText,
+    ChevronRight,
+    StickyNote
 } from 'lucide-react';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import { topics } from '@/data/topics';
+import { learningPaths, revisionResources } from '@/data/learning-paths';
 
 interface SidebarItem {
     title: string;
@@ -27,8 +28,8 @@ interface SidebarItem {
 
 const mainNavIds: SidebarItem[] = [
     { title: 'Explore', href: '/', icon: LayoutGrid },
-    { title: 'DSA', href: '/dsa', icon: Code }, // Renamed from Practice
-    { title: 'Technology', href: '/technology', icon: Server }, // Renamed from System Design
+    { title: 'DSA', href: '/dsa', icon: Code },
+    { title: 'Technology', href: '/technology', icon: Server },
     { title: 'Career Paths', href: '/learn', icon: GraduationCap },
 ];
 
@@ -60,7 +61,7 @@ export function Sidebar() {
             {/* Sidebar Container */}
             <aside
                 className={cn(
-                    "fixed inset-y-0 left-0 z-40 w-72 transform bg-sidebar border-r border-sidebar-border transition-transform duration-200 ease-in-out md:translate-x-0 md:static md:h-screen md:sticky md:top-0 flex flex-col",
+                    "fixed inset-y-0 left-0 z-40 w-80 transform bg-sidebar border-r border-sidebar-border transition-transform duration-200 ease-in-out md:translate-x-0 md:static md:h-screen md:sticky md:top-0 flex flex-col",
                     isOpen ? "translate-x-0" : "-translate-x-full"
                 )}
             >
@@ -111,7 +112,7 @@ export function Sidebar() {
                             <Accordion type="multiple" defaultValue={['dsa', 'tech']} className="w-full">
                                 {/* DSA Section */}
                                 <AccordionItem value="dsa" className="border-none">
-                                    <AccordionTrigger className="py-2 px-3 text-sm font-medium hover:bg-sidebar-accent/30 rounded-md hover:no-underline">
+                                    <AccordionTrigger className="py-2 px-3 text-sm font-medium hover:bg-sidebar-accent/30 rounded-md hover:no-underline text-sidebar-foreground">
                                         <div className="flex items-center gap-2">
                                             <Code className="w-4 h-4 text-emerald-500" />
                                             <span>DSA Topics</span>
@@ -140,7 +141,7 @@ export function Sidebar() {
 
                                 {/* Technology Section */}
                                 <AccordionItem value="tech" className="border-none">
-                                    <AccordionTrigger className="py-2 px-3 text-sm font-medium hover:bg-sidebar-accent/30 rounded-md hover:no-underline">
+                                    <AccordionTrigger className="py-2 px-3 text-sm font-medium hover:bg-sidebar-accent/30 rounded-md hover:no-underline text-sidebar-foreground">
                                         <div className="flex items-center gap-2">
                                             <Server className="w-4 h-4 text-blue-500" />
                                             <span>Technology</span>
@@ -163,6 +164,76 @@ export function Sidebar() {
                                                     {topic.title}
                                                 </Link>
                                             ))}
+                                        </div>
+                                    </AccordionContent>
+                                </AccordionItem>
+
+                                {/* Career Paths Section */}
+                                <AccordionItem value="career" className="border-none">
+                                    <AccordionTrigger className="py-2 px-3 text-sm font-medium hover:bg-sidebar-accent/30 rounded-md hover:no-underline text-sidebar-foreground">
+                                        <div className="flex items-center gap-2">
+                                            <GraduationCap className="w-4 h-4 text-indigo-500" />
+                                            <span>Career Paths</span>
+                                        </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent className="pb-2">
+                                        <div className="pl-4 space-y-2 mt-1 border-l ml-3 border-sidebar-border">
+                                            {/* Sub-Accordion for each Path */}
+                                            <Accordion type="multiple" className="w-full">
+                                                {learningPaths.map((path) => (
+                                                    <AccordionItem key={path.slug} value={path.slug} className="border-none">
+                                                        <AccordionTrigger className="py-1.5 px-3 text-sm font-normal text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/30 rounded-md hover:no-underline">
+                                                            <div className="flex items-center gap-2">
+                                                                <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                                                                <span className="truncate">{path.title}</span>
+                                                            </div>
+                                                        </AccordionTrigger>
+                                                        <AccordionContent className="pb-1">
+                                                            <div className="pl-4 space-y-0.5 border-l ml-2.5 border-sidebar-border/50 mt-1">
+                                                                {path.steps.map((step) => (
+                                                                    <Link
+                                                                        key={step.id}
+                                                                        href={`/learn/${path.slug}#${step.id}`}
+                                                                        onClick={() => setIsOpen(false)}
+                                                                        className="block px-3 py-1 text-xs text-muted-foreground hover:text-primary transition-colors truncate hover:bg-sidebar-accent/20 rounded-sm"
+                                                                        title={step.title}
+                                                                    >
+                                                                        {step.title}
+                                                                    </Link>
+                                                                ))}
+                                                            </div>
+                                                        </AccordionContent>
+                                                    </AccordionItem>
+                                                ))}
+
+                                                {/* Revision Resources Sub-section */}
+                                                <AccordionItem value="resources" className="border-none">
+                                                    <AccordionTrigger className="py-1.5 px-3 text-sm font-normal text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/30 rounded-md hover:no-underline">
+                                                        <div className="flex items-center gap-2">
+                                                            <StickyNote className="w-3 h-3 text-amber-500" />
+                                                            <span>Revision Resources</span>
+                                                        </div>
+                                                    </AccordionTrigger>
+                                                    <AccordionContent className="pb-1">
+                                                        <div className="pl-4 space-y-0.5 border-l ml-2.5 border-sidebar-border/50 mt-1">
+                                                            {revisionResources.map((res) => (
+                                                                <Link
+                                                                    key={res.id}
+                                                                    href="/learn#resources"
+                                                                    onClick={() => setIsOpen(false)}
+                                                                    className="block px-3 py-1 text-xs text-muted-foreground hover:text-primary transition-colors truncate hover:bg-sidebar-accent/20 rounded-sm"
+                                                                    title={res.title}
+                                                                >
+                                                                    <span className="flex items-center gap-1.5">
+                                                                        {res.type === 'pdf' ? <FileText className="w-3 h-3" /> : <StickyNote className="w-3 h-3" />}
+                                                                        {res.title}
+                                                                    </span>
+                                                                </Link>
+                                                            ))}
+                                                        </div>
+                                                    </AccordionContent>
+                                                </AccordionItem>
+                                            </Accordion>
                                         </div>
                                     </AccordionContent>
                                 </AccordionItem>
