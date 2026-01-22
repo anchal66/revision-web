@@ -17,6 +17,7 @@ interface PDFViewerProps {
 }
 
 export function PDFViewer({ pdfUrl, title, backUrl = '/learn' }: PDFViewerProps) {
+    const [removeBackground, setRemoveBackground] = useState<boolean>(false);
     const [numPages, setNumPages] = useState<number>(0);
     const [pageNumber, setPageNumber] = useState<number>(1);
     const [scale, setScale] = useState<number>(1.2);
@@ -37,6 +38,7 @@ export function PDFViewer({ pdfUrl, title, backUrl = '/learn' }: PDFViewerProps)
     const goToNextPage = () => setPageNumber((prev) => Math.min(prev + 1, numPages));
     const zoomIn = () => setScale((prev) => Math.min(prev + 0.2, 2.5));
     const zoomOut = () => setScale((prev) => Math.max(prev - 0.2, 0.5));
+    const toggleBlendMode = () => setRemoveBackground(!removeBackground);
 
     // Prevent right-click context menu
     const handleContextMenu = (e: React.MouseEvent) => {
@@ -71,6 +73,17 @@ export function PDFViewer({ pdfUrl, title, backUrl = '/learn' }: PDFViewerProps)
 
                     {/* Controls */}
                     <div className="flex items-center gap-2">
+                        {/* Blend Toggle */}
+                        <Button
+                            variant={removeBackground ? "secondary" : "ghost"}
+                            size="sm"
+                            onClick={toggleBlendMode}
+                            title="Remove White Background"
+                            className="hidden sm:flex text-xs h-8"
+                        >
+                            {removeBackground ? "Text Only" : "Original"}
+                        </Button>
+
                         {/* Zoom */}
                         <div className="flex items-center gap-1 border rounded-lg p-1">
                             <Button
@@ -153,7 +166,10 @@ export function PDFViewer({ pdfUrl, title, backUrl = '/learn' }: PDFViewerProps)
                         scale={scale}
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
-                        className="shadow-2xl rounded-lg overflow-hidden"
+                        className={cn(
+                            "shadow-2xl rounded-lg overflow-hidden transition-all duration-300",
+                            removeBackground && "mix-blend-multiply dark:mix-blend-screen dark:invert"
+                        )}
                     />
                 </Document>
             </div>
