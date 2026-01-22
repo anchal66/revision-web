@@ -30,7 +30,7 @@ const mainNavIds: SidebarItem[] = [
     { title: 'Explore', href: '/', icon: LayoutGrid },
     { title: 'DSA', href: '/dsa', icon: Code },
     { title: 'Technology', href: '/technology', icon: Server },
-    { title: 'Career Paths', href: '/learn', icon: GraduationCap },
+    { title: 'Interview Questions', href: '/learn', icon: GraduationCap },
 ];
 
 export function Sidebar() {
@@ -58,7 +58,7 @@ export function Sidebar() {
         if (pathname === '/technology' || treeData.tech.some(t => pathname === `/${t.slug}`)) {
             return 'tech';
         }
-        // Check if on Career Paths
+        // Check if on Interview Questions
         if (pathname.startsWith('/learn') || pathname === '/view') {
             return 'career';
         }
@@ -199,12 +199,12 @@ export function Sidebar() {
                                     </AccordionContent>
                                 </AccordionItem>
 
-                                {/* Career Paths Section */}
+                                {/* Interview Questions Section */}
                                 <AccordionItem value="career" className="border-none">
                                     <AccordionTrigger className="py-2 px-3 text-sm font-medium hover:bg-sidebar-accent/30 rounded-md hover:no-underline text-sidebar-foreground">
                                         <div className="flex items-center gap-2">
                                             <GraduationCap className="w-4 h-4 text-indigo-500" />
-                                            <span>Career Paths</span>
+                                            <span>Interview Questions</span>
                                         </div>
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-2">
